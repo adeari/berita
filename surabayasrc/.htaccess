@@ -1,0 +1,11 @@
+Options +FollowSymLinks
+RewriteEngine On
+
+<Files .env>
+Order Allow,Deny
+Deny from all
+</Files>
+
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^ index.php [L]
