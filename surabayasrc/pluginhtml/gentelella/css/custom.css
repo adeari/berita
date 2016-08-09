@@ -886,6 +886,10 @@ legend {
     clear:both;
 }
 
+.profile_details {
+	width: 100%;
+}
+
 .profile_details .profile_view {
   display: inline-block;
   padding: 10px 0 0;
