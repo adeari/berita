@@ -20,7 +20,7 @@
                         {!! Form::label('kategori', 'Kategori', ['class' => 'control-label col-md-3 col-sm-3 col-xs-12']) !!}
                         </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          {!! Form::select('kategori', ['Berita' => 'Berita', 'Acara' => 'Acara', 'Pengaduan' => 'Pengaduan', ],'', ['class' => 'form-control col-md-7 col-xs-12', 'id' => 'judulberita', 'required' => 'required', 'v-model' => 'kategori']) !!}
+                          {!! Form::select('kategori', ['Umum' => 'Umum', 'Acara' => 'Acara', 'Pengaduan' => 'Pengaduan', ], 'Umum', ['class' => 'form-control col-md-7 col-xs-12', 'id' => 'judulberita', 'required' => 'required', 'v-model' => 'kategori']) !!}
                         </div>
                       </div>                    
                     <div class="item form-group">

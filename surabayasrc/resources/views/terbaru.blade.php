@@ -1,12 +1,12 @@
 @extends('layout')
-@section('title', 'Surabaya Berita Populer')
+@section('title', 'Surabaya Berita Terbaru')
 @section('content')
 <!-- page content -->
 <div class="right_col" role="main">
   <div class="">
     <div class="page-title">
       <div class="title_left">
-	<h3>Berita Populer</h3>
+	<h3>Berita Terbaru</h3>
       </div>
 
       <div class="title_right">
@@ -51,7 +51,7 @@
 @section('javascript')
 <script>
 menuvue.isberitaactive = true;
-menuvue.populer = true;
+menuvue.terbaru = true;
 menuvue.beritastyle = {display: 'block'};
 var vue = new Vue({
 	el: '#appcontent',

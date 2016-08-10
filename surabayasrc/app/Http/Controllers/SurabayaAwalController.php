@@ -8,8 +8,11 @@ use URL;
 class SurabayaAwalController extends MasterController
 {
     public function index() {
+    	return redirect('populer');
+    }
+    public function populer() {
     	$beritas = '';
-    	$databeritas = TbBerita::all();
+    	$databeritas = TbBerita::orderBy('id', 'desc')->get();
     	$folderimage = 'public/image';
     	foreach ($databeritas as $databerita) {
     		$width = 0;
@@ -28,11 +31,71 @@ class SurabayaAwalController extends MasterController
     			$beritas .= ',';
     		}
     		$tanggal = substr($databerita->updated_at, 8, 2).'/'.substr($databerita->updated_at, 5, 2).'/'.substr($databerita->updated_at, 0, 4).substr($databerita->updated_at, 10, 6);
-    		$beritas .= '{id:'.$databerita->id.', filename:\''.$filename.'\', width:\''.$width.'\', height:\''.$height.'\', judul:\''.$databerita->judul.'\', deskripsi: \''.$databerita->deskripsi.'\'
+    		$beritas .= '{id:'.$databerita->id.', filename:\''.$filename.'\', width:\''.$width.'\', height:\''.$height.'\', judul:\''.str_replace('\'', '\\\'', $databerita->judul).'\', deskripsi: \''.str_replace('\'', '\\\'', $databerita->deskripsi).'\'
     				,tanggal:\''.$tanggal.'\'}';
     	}
     	return view('populer', [
     			'beritas' => $beritas
+    			, 'backpage' => 'populer'
+    	]);
+    }
+    public function terbaru() {
+    	$beritas = '';
+    	$databeritas = TbBerita::orderBy('updated_at', 'desc')->get();
+    	$folderimage = 'public/image';
+    	foreach ($databeritas as $databerita) {
+    		$width = 0;
+    		$height = 0;
+    		$filename = $databerita->filename;
+    		if (!is_null($filename)) {
+    			$pathfilename =  $folderimage.'/'.$filename;
+    			$filename = URL::to($pathfilename);
+    			list($width, $height) = getimagesize($pathfilename);
+    			if ($width > 300) {
+    				$height = intval($height * 300 / $width);
+    				$width = 300;
+    			}
+    		}
+    		if (strlen($beritas) > 0) {
+    			$beritas .= ',';
+    		}
+    		$tanggal = substr($databerita->updated_at, 8, 2).'/'.substr($databerita->updated_at, 5, 2).'/'.substr($databerita->updated_at, 0, 4).substr($databerita->updated_at, 10, 6);
+    		$beritas .= '{id:'.$databerita->id.', filename:\''.$filename.'\', width:\''.$width.'\', height:\''.$height.'\', judul:\''.str_replace('\'', '\\\'', $databerita->judul).'\', deskripsi: \''.str_replace('\'', '\\\'', $databerita->deskripsi).'\'
+    				,tanggal:\''.$tanggal.'\'}';
+    	}
+    	return view('terbaru', [
+    			'beritas' => $beritas
+    			, 'backpage' => 'terbaru'
+    	]);
+    }
+    public function artikel($artikel) {
+    	$beritas = '';
+    	$databeritas = TbBerita::where('kategori', '=',  $artikel)->orderBy('updated_at', 'desc')->get();
+    	$folderimage = 'public/image';
+    	foreach ($databeritas as $databerita) {
+    		$width = 0;
+    		$height = 0;
+    		$filename = $databerita->filename;
+    		if (!is_null($filename)) {
+    			$pathfilename =  $folderimage.'/'.$filename;
+    			$filename = URL::to($pathfilename);
+    			list($width, $height) = getimagesize($pathfilename);
+    			if ($width > 300) {
+    				$height = intval($height * 300 / $width);
+    				$width = 300;
+    			}
+    		}
+    		if (strlen($beritas) > 0) {
+    			$beritas .= ',';
+    		}
+    		$tanggal = substr($databerita->updated_at, 8, 2).'/'.substr($databerita->updated_at, 5, 2).'/'.substr($databerita->updated_at, 0, 4).substr($databerita->updated_at, 10, 6);
+    		$beritas .= '{id:'.$databerita->id.', filename:\''.$filename.'\', width:\''.$width.'\', height:\''.$height.'\', judul:\''.str_replace('\'', '\\\'', $databerita->judul).'\', deskripsi: \''.str_replace('\'', '\\\'', $databerita->deskripsi).'\'
+    				,tanggal:\''.$tanggal.'\'}';
+    	}
+    	return view('artikel', [
+    			'beritas' => $beritas
+    			, 'artikel' => ucfirst($artikel)
+    			, 'backpage' => $artikel
     	]);
     }
     public function beritaadd() {
@@ -108,5 +171,10 @@ class SurabayaAwalController extends MasterController
 			$tbberita->save();
 		}
 		return $return;
+	}
+	public function beritadetail($id, $backpage = '') {
+		return view('beritadetail', ['berita' => TbBerita::find($id)
+				, 'backpage' => $backpage
+		]);
 	}
 }

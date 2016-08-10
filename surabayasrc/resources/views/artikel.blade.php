@@ -1,12 +1,12 @@
 @extends('layout')
-@section('title', 'Surabaya Berita Populer')
+@section('title', $artikel)
 @section('content')
 <!-- page content -->
 <div class="right_col" role="main">
   <div class="">
     <div class="page-title">
       <div class="title_left">
-	<h3>Berita Populer</h3>
+	<h3>{{ $artikel }}</h3>
       </div>
 
       <div class="title_right">
@@ -34,7 +34,7 @@
     <div class="x_content" v-show="berita.filename.length == 0">@{{{ berita.deskripsi }}}</div>
     <div class="x_content" v-show="berita.filename.length > 0">
     <div class="row">
-    	<div class="col-md-4"><img src="@{{ berita.filename }}" width="@{{ berita.width }}px" height="@{{ berita.height }}px"></div>
+    	<div class="col-md-4"><img src="@{{ berita.filename }}" style="max-width:100%;"></div>
     	<div class="col-md-8"><p>@{{{ berita.deskripsi }}}</p></div>
     </div>
     </div>
@@ -50,9 +50,9 @@
 @endsection
 @section('javascript')
 <script>
-menuvue.isberitaactive = true;
-menuvue.populer = true;
-menuvue.beritastyle = {display: 'block'};
+menuvue.isartikelactive = true;
+menuvue.{{ $backpage }} = true;
+menuvue.artikelstyle = {display: 'block'};
 var vue = new Vue({
 	el: '#appcontent',
 	data: {
@@ -63,7 +63,7 @@ var vue = new Vue({
 	},
 	methods:{
 		detailberita: function(id){
-			location.href = '{{ URL::to('beritadetail-') }}'+id+'-{{ $backpage }}';
+			location.href = '{{ URL::to('beritadetail-') }}'+id+'-artikel-{{ $backpage }}';
 		}
 	}
 });
