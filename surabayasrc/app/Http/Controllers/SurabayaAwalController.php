@@ -15,23 +15,16 @@ class SurabayaAwalController extends MasterController
     	$databeritas = TbBerita::orderBy('id', 'desc')->get();
     	$folderimage = 'public/image';
     	foreach ($databeritas as $databerita) {
-    		$width = 0;
-    		$height = 0;
     		$filename = $databerita->filename;
     		if (!is_null($filename)) {
     			$pathfilename =  $folderimage.'/'.$filename;
     			$filename = URL::to($pathfilename);
-    			list($width, $height) = getimagesize($pathfilename);
-    			if ($width > 300) {
-    				$height = intval($height * 300 / $width);
-    				$width = 300;
-    			}
     		}
     		if (strlen($beritas) > 0) {
     			$beritas .= ',';
     		}
     		$tanggal = substr($databerita->updated_at, 8, 2).'/'.substr($databerita->updated_at, 5, 2).'/'.substr($databerita->updated_at, 0, 4).substr($databerita->updated_at, 10, 6);
-    		$beritas .= '{id:'.$databerita->id.', filename:\''.$filename.'\', width:\''.$width.'\', height:\''.$height.'\', judul:\''.str_replace('\'', '\\\'', $databerita->judul).'\', deskripsi: \''.str_replace('\'', '\\\'', $databerita->deskripsi).'\'
+    		$beritas .= '{id:'.$databerita->id.', filename:\''.$filename.'\', judul:\''.$this->setlinestring($databerita->judul).'\', deskripsi: \''.$this->setlinestring($databerita->deskripsi).'\'
     				,tanggal:\''.$tanggal.'\'}';
     	}
     	return view('populer', [
@@ -44,23 +37,16 @@ class SurabayaAwalController extends MasterController
     	$databeritas = TbBerita::orderBy('updated_at', 'desc')->get();
     	$folderimage = 'public/image';
     	foreach ($databeritas as $databerita) {
-    		$width = 0;
-    		$height = 0;
     		$filename = $databerita->filename;
     		if (!is_null($filename)) {
     			$pathfilename =  $folderimage.'/'.$filename;
     			$filename = URL::to($pathfilename);
-    			list($width, $height) = getimagesize($pathfilename);
-    			if ($width > 300) {
-    				$height = intval($height * 300 / $width);
-    				$width = 300;
-    			}
     		}
     		if (strlen($beritas) > 0) {
     			$beritas .= ',';
     		}
     		$tanggal = substr($databerita->updated_at, 8, 2).'/'.substr($databerita->updated_at, 5, 2).'/'.substr($databerita->updated_at, 0, 4).substr($databerita->updated_at, 10, 6);
-    		$beritas .= '{id:'.$databerita->id.', filename:\''.$filename.'\', width:\''.$width.'\', height:\''.$height.'\', judul:\''.str_replace('\'', '\\\'', $databerita->judul).'\', deskripsi: \''.str_replace('\'', '\\\'', $databerita->deskripsi).'\'
+    		$beritas .= '{id:'.$databerita->id.', filename:\''.$filename.'\', judul:\''.$this->setlinestring($databerita->judul).'\', deskripsi: \''.$this->setlinestring($databerita->deskripsi).'\'
     				,tanggal:\''.$tanggal.'\'}';
     	}
     	return view('terbaru', [
@@ -73,23 +59,16 @@ class SurabayaAwalController extends MasterController
     	$databeritas = TbBerita::where('kategori', '=',  $artikel)->orderBy('updated_at', 'desc')->get();
     	$folderimage = 'public/image';
     	foreach ($databeritas as $databerita) {
-    		$width = 0;
-    		$height = 0;
     		$filename = $databerita->filename;
     		if (!is_null($filename)) {
     			$pathfilename =  $folderimage.'/'.$filename;
     			$filename = URL::to($pathfilename);
-    			list($width, $height) = getimagesize($pathfilename);
-    			if ($width > 300) {
-    				$height = intval($height * 300 / $width);
-    				$width = 300;
-    			}
     		}
     		if (strlen($beritas) > 0) {
     			$beritas .= ',';
     		}
     		$tanggal = substr($databerita->updated_at, 8, 2).'/'.substr($databerita->updated_at, 5, 2).'/'.substr($databerita->updated_at, 0, 4).substr($databerita->updated_at, 10, 6);
-    		$beritas .= '{id:'.$databerita->id.', filename:\''.$filename.'\', width:\''.$width.'\', height:\''.$height.'\', judul:\''.str_replace('\'', '\\\'', $databerita->judul).'\', deskripsi: \''.str_replace('\'', '\\\'', $databerita->deskripsi).'\'
+    		$beritas .= '{id:'.$databerita->id.', filename:\''.$filename.'\', judul:\''.$this->setlinestring($databerita->judul).'\', deskripsi: \''.$this->setlinestring($databerita->deskripsi).'\'
     				,tanggal:\''.$tanggal.'\'}';
     	}
     	return view('artikel', [
@@ -162,9 +141,9 @@ class SurabayaAwalController extends MasterController
 		if ($return['success'] == '1') {
 			$filename = $return['filename'];
 			$tbberita = new TbBerita();
-			$tbberita->judul = $request->input('judul');
-			$tbberita->deskripsi = $request->input('deskripsi');
-			$tbberita->kategori = $request->input('kategori');
+			$tbberita->judul = $this->removeUnusedCharacter($request->input('judul'));
+			$tbberita->deskripsi = $this->removeUnusedCharacter($request->input('deskripsi'));
+			$tbberita->kategori = $this->removeUnusedCharacter($request->input('kategori'));
 			if (!is_null($filename)) {
 				$tbberita->filename = $filename;
 			}

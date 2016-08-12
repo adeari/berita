@@ -84,7 +84,7 @@
     <script src="{{ URL::to('pluginhtml') }}/vue-resource.min.js"></script>
     <script src="{{ URL::to('pluginhtml') }}/mycustom.js"></script>
     <!-- Custom Theme Scripts -->
-    <script src="{{ URL::to('pluginhtml/gentelella/build') }}/js/custom.js"></script>
+    <script src="{{ URL::to('pluginhtml/gentelella/build') }}/js/custom.min.js"></script>
 @yield('javascript')
   </body>
 </html>
