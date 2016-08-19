@@ -7,3 +7,5 @@ Route::get('berita-add', 'SurabayaAwalController@beritaadd');
 Route::post('uploadfile', 'SurabayaAwalController@uploadfile');
 Route::post('addberita', 'SurabayaAwalController@addberita');
 Route::get('beritadetail-{id}-{backpage}', 'SurabayaAwalController@beritadetail');
+
+Route::post('android/berita-add', 'SurabayaAwalController@beritaadd1');
