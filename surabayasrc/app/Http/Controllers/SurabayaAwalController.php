@@ -156,12 +156,4 @@ class SurabayaAwalController extends MasterController
 				, 'backpage' => $backpage
 		]);
 	}
-  public function beritaadd1(Request $request) {
-    $tbberita = new TbBerita();
-			$tbberita->judul = $this->removeUnusedCharacter($request->input('judul'));
-			$tbberita->deskripsi = $this->removeUnusedCharacter($request->input('deskripsi'));
-			$tbberita->kategori = $this->removeUnusedCharacter($request->input('kategori'));
-			$tbberita->save();
-			return 'ddd';
-  }
 }
