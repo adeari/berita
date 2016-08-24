@@ -12,6 +12,11 @@ class AndroidController extends MasterController
     $tbberita->judul = $this->removeUnusedCharacter($request->input('judul'));
     $tbberita->deskripsi = $this->removeUnusedCharacter($request->input('deskripsi'));
     $tbberita->kategori = $this->removeUnusedCharacter($request->input('kategori'));
+	if (!empty($request->input('filename'))) {
+		$tbberita->filename = $request->input('filename');
+	} else {
+		$tbberita->filename = null;
+	}
     $tbberita->save();
     return '1';
   }
@@ -42,5 +47,21 @@ class AndroidController extends MasterController
       $row['filename'] = '';
     }
     return $row;
+  }
+  public function getfilename($extension) {
+	  $newfilename = "";
+	  if ($extension == "jpg" || $extension == "jpeg" || $extension == "png" || $extension == "bmp") {
+	  $folderupload = 'public/image/';
+	  $newfilename = 'andr_'.$this->generateRandomString(8). '.' . $extension;
+	  $filenameExist = true;
+	  while ($filenameExist) {
+			if (file_exists($folderupload.$newfilename)) {
+				$newfilename = 'andr_'.$newfilenamecek.$this->generateRandomString(8). '.' . $extension;
+			} else {
+				$filenameExist = false;
+			}
+		}
+	  }
+	return $newfilename;
   }
 }

@@ -11,3 +11,4 @@ Route::get('beritadetail-{id}-{backpage}', 'SurabayaAwalController@beritadetail'
 Route::post('android/berita-add', 'AndroidController@beritaadd1');
 Route::get('android/populer', 'AndroidController@populer');
 Route::get('android/beritadetail-{id}', 'AndroidController@beritadetail');
+Route::get('android/getfilename-{extension}', 'AndroidController@getfilename');
