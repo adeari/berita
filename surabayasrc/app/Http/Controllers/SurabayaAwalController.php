@@ -156,4 +156,7 @@ class SurabayaAwalController extends MasterController
 				, 'backpage' => $backpage
 		]);
 	}
+	public function androidpage() {
+	  return view('androidpage');
+	}
 }

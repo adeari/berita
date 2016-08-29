@@ -1,0 +1,4 @@
+{
+  "name": "surabaya"
+, "files": [ { "/home/ade/windows/proyek/surabaya/surabayasrc/": "surabaya", "filters": ["*.php", "*.html", "*.css", "*.js", "*.ctp", "*.txt", "CMakeLists.txt", "Find*.cmake"], "recursive": 1 } ]
+}

@@ -10,5 +10,6 @@ var menuvue = new Vue({
 		,umum : false
 		,acara : false
 		,pengaduan : false
+		,androidpage : false
 	}
 });

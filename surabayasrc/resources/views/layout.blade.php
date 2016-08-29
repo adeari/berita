@@ -40,6 +40,7 @@
                       	<li v-bind:class="{ 'current-page': umum }"><a href="{{ URL::to('artikel-umum') }}"><i class="fa fa-newspaper-o"></i> Umum</a></li>
                       	<li v-bind:class="{ 'current-page': acara }"><a href="{{ URL::to('artikel-acara') }}"><i class="fa fa-gift"></i> Acara</a></li>
                       	<li v-bind:class="{ 'current-page': pengaduan }"><a href="{{ URL::to('artikel-pengaduan') }}"><i class="fa fa-binoculars"></i> Pengaduan</a></li>
+                      	<li v-bind:class="{ 'current-page': androidpage }"><a href="{{ URL::to('androidpage') }}"><i class="fa fa-android"></i> Android</a></li>
                     </ul>
                 </li>
                 <li><a><i class="fa fa-certificate"></i> Pengaturan<span class="fa fa-chevron-down"></span></a>
