@@ -22,11 +22,11 @@ var validator = (function(){
 		number_max		: 'too high',
 		url				: 'invalid URL',
 		number			: 'not a number',
-		email			: 'email address is invalid',
+		email			: 'Email tidak sesuai',
 		email_repeat	: 'emails do not match',
-		password_repeat	: 'passwords do not match',
+		password_repeat	: 'Password tidak sama',
 		repeat			: 'no match',
-		complete		: 'input is not complete',
+		complete		: 'Digit Karakter masih kurang',
 		select			: 'Silahkan pilih'
 	};
 	

@@ -4,6 +4,8 @@ use App\Http\Controllers\MasterController;
 use Illuminate\Http\Request;
 use App\tables\TbBerita;
 use URL;
+use Auth;
+use App\User;
 
 class SurabayaAwalController extends MasterController
 {
@@ -159,4 +161,25 @@ class SurabayaAwalController extends MasterController
 	public function androidpage() {
 	  return view('androidpage');
 	}
+	public function login(Request $request) {
+	  $variable['viewdaftar'] = true;
+	  if (isset($request->loginonly)) {
+	    $variable['viewdaftar'] = false;
+	  }
+	  return view('login', $variable);
+	}
+	public function daftar() {
+	  return view('daftar');
+	}
+	
+  public function mendaftarweb(Request $request) {
+	  return $this->mendaftar($request);
+	}
+  public function cekloginweb(Request $request) {
+    return $this->ceklogin($request);
+  }
+  public function logout() {
+    Auth::logout();
+    return redirect('/');
+  }
 }

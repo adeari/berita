@@ -1,0 +1,1 @@
+rm -f /public_html/public/image/*.php 

@@ -18,14 +18,12 @@
                     {!! Form::open(['class' => 'form-horizontal form-label-left', 'novalidate' => 'novalidate', '@submit.prevent' => 'onsubmit', 'id' => 'formdata'])  !!}
                     <div class="item form-group">
                         {!! Form::label('kategori', 'Kategori', ['class' => 'control-label col-md-3 col-sm-3 col-xs-12']) !!}
-                        </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
                           {!! Form::select('kategori', ['Umum' => 'Umum', 'Acara' => 'Acara', 'Pengaduan' => 'Pengaduan', ], 'Umum', ['class' => 'form-control col-md-7 col-xs-12', 'id' => 'judulberita', 'required' => 'required', 'v-model' => 'kategori']) !!}
                         </div>
                       </div>                    
                     <div class="item form-group">
                         {!! Form::label('imageberita', 'Gambar', ['class' => 'control-label col-md-3 col-sm-3 col-xs-12']) !!}
-                        </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
                           <input name="imageberita" type="file" id="imageberita" @change="onchangeimage">
                           <div v-show="imageberitashow"><br><img src="" id="imagepict" width="260px" height="200px" class="pointer"></div>
@@ -33,7 +31,6 @@
                       </div>
                       <div class="item form-group">
                         {!! Form::label('judulberita', 'Judul Berita', ['class' => 'control-label col-md-3 col-sm-3 col-xs-12']) !!}
-                        </label>
                         <div class="col-md-6 col-sm-6 col-xs-12">
                           {!! Form::text('judulberita', '', ['class' => 'form-control col-md-7 col-xs-12', 'id' => 'judulberita', 'required' => 'required', 'v-model' => 'judul']) !!}
                         </div>
@@ -113,13 +110,40 @@
                 </div>
               </div>
             </div>
-                      
-                      
+<div class="demo" style="display:none;" v-show="loadingshow">
+  <svg class="loader">
+    <filter id="blur">
+      <fegaussianblur in="SourceGraphic" stddeviation="2"></fegaussianblur>
+    </filter>
+    <circle cx="75" cy="75" r="60" fill="transparent" stroke="#F4F519" stroke-width="6" stroke-linecap="round" stroke-dasharray="385" stroke-dashoffset="385" filter="url(#blur)"></circle>
+  </svg>
+  <svg class="loader loader-2">
+    <circle cx="75" cy="75" r="60" fill="transparent" stroke="#DE2FFF" stroke-width="6" stroke-linecap="round" stroke-dasharray="385" stroke-dashoffset="385" filter="url(#blur)"></circle>
+  </svg>
+  <svg class="loader loader-3">
+    <circle cx="75" cy="75" r="60" fill="transparent" stroke="#FF5932" stroke-width="6" stroke-linecap="round" stroke-dasharray="385" stroke-dashoffset="385" filter="url(#blur)"></circle>
+  </svg>
+  <svg class="loader loader-4">
+    <circle cx="75" cy="75" r="60" fill="transparent" stroke="#E97E42" stroke-width="6" stroke-linecap="round" stroke-dasharray="385" stroke-dashoffset="385" filter="url(#blur)"></circle>
+  </svg>
+  <svg class="loader loader-5">
+    <circle cx="75" cy="75" r="60" fill="transparent" stroke="white" stroke-width="6" stroke-linecap="round" filter="url(#blur)"></circle>
+  </svg>
+  <svg class="loader loader-6">
+    <circle cx="75" cy="75" r="60" fill="transparent" stroke="#00DCA3" stroke-width="6" stroke-linecap="round" stroke-dasharray="385" stroke-dashoffset="385" filter="url(#blur)"></circle>
+  </svg>
+  <svg class="loader loader-7">
+    <circle cx="75" cy="75" r="60" fill="transparent" stroke="purple" stroke-width="6" stroke-linecap="round" stroke-dasharray="385" stroke-dashoffset="385" filter="url(#blur)"></circle>
+  </svg>
+  <svg class="loader loader-8">
+    <circle cx="75" cy="75" r="60" fill="transparent" stroke="#AAEA33" stroke-width="6" stroke-linecap="round" stroke-dasharray="385" stroke-dashoffset="385" filter="url(#blur)"></circle>
+  </svg>
+</div>		  
                       <div class="ln_solid"></div>
-                      <div class="form-group">
+                      <div class="form-group" v-show="simpanbuttonshow">
                         <div class="col-md-6 col-md-offset-3">
+			  <button id="send" type="submit" class="btn btn-success">Simpan</button>
                           <button type="submit" class="btn btn-primary">Batal</button>
-                          <button id="send" type="submit" class="btn btn-success">Simpan</button>
                         </div>
                       </div>
                     {!! Form::close() !!}
@@ -211,6 +235,9 @@
 				imageberitashow: false,
 				judul: '',
 				kategori: '',
+				cansave:true,
+				loadingshow: false,
+				simpanbuttonshow: true,
 			},
 			methods:{
 				onchangeimage: function(evue) {
@@ -223,35 +250,44 @@
 				    	}
 				    	this.imageberitashow = true;
 				    	validator.unmark( $('#imageberita'));
+				    	this.cansave = true;
 					} else {
+					this.cansave = false;
 						this.imageberitashow = false;
 						validator.mark( $('#imageberita'), 'Gambar Maksimal 2MB');
 					}
 				},
 				onsubmit: function(evue) {
-					elem = this;
-					csrf = '{!! csrf_token() !!}';
-					if (validator.checkAll($('#formdata'))) {
-						var form = document.querySelector('#imageberita');
-				        var file = form.files[0];
-						var oData = new FormData();
-				        oData.append('image', file);
-				        oData.append('_token', csrf);
-				        oData.append('judul', this.judul);
-				        oData.append('deskripsi', $('#editor').html());
-				        oData.append('kategori', this.kategori);
-				        elem.$http.post('{{ URL::to('addberita') }}',oData).then(function(response){
-					        jsonresponse = JSON.parse(response.body);
-							if (jsonresponse.msg == 'ErrorException') {
-								window.location.assign('{{ URL::to('/') }}')
-							} else {
-								location = '/';
-							}
-				        });
-					}
+				  elem = this;
+				  elem.cansave = false;
+				  csrf = '{!! csrf_token() !!}';
+				  if (validator.checkAll($('#formdata'))) {
+				  if (this.cansave) {
+					    var form = document.querySelector('#imageberita');
+				    var file = form.files[0];
+					    var oData = new FormData();
+				    oData.append('image', file);
+				    oData.append('_token', csrf);
+				    oData.append('judul', this.judul);
+				    oData.append('deskripsi', $('#editor').html());
+				    oData.append('kategori', this.kategori);
+				    elem.simpanbuttonshow = false;
+				    elem.loadingshow = true;
+				    elem.$http.post('{{ URL::to('addberita') }}',oData).then(function(response){
+					    jsonresponse = JSON.parse(response.body);
+						    if (jsonresponse.msg == 'ErrorException') {
+							    window.location.assign('{{ URL::to('/') }}')
+						    } else {
+							    location = '/';
+						    }
+ 						    elem.simpanbuttonshow = true;
+ 				    elem.loadingshow = false;
+ 				    elem.cansave=true;
+				    });
+				    }
+				  }
 				}
 			}
         });
-        appcontent
     </script>
 @endsection

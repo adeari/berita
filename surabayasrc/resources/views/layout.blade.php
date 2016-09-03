@@ -15,6 +15,7 @@
     <link href="{{ URL::to('pluginhtml/gentelella/build') }}/css/custom.min.css" rel="stylesheet">
     <link href="{{ URL::to('pluginhtml/gentelella/vendors') }}/google-code-prettify/bin/prettify.min.css" rel="stylesheet">
     <link href="{{ URL::to('pluginhtml/creator.css') }}" rel="stylesheet">
+    <link href="{{ URL::to('pluginhtml/mycustom.css') }}" rel="stylesheet">
   </head>
   <body class="nav-md">
     <div class="container body">
@@ -29,6 +30,12 @@
             <!-- sidebar menu -->
             <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
             	<ul class="nav side-menu">
+@if (Auth::check())
+  <li><a href="{{ URL::to('logout') }}"><i class="fa fa-sign-out"></i> Logout</a>
+@else
+  <li v-bind:class="{ 'active': isloginactive }"><a href="{{ URL::to('login') }}"><i class="fa fa-key"></i> Login</a>
+@endif	
+                </li>
             	<li v-bind:class="{ 'active': isberitaactive }"><a><i class="fa fa-star-o"></i> Berita <span class="fa fa-chevron-down"></span></a>
 					<ul class="nav child_menu" v-bind:style="beritastyle">
                       	<li v-bind:class="{ 'current-page': populer }"><a href="{{ URL::to('populer') }}"><i class="fa fa-trophy"></i> Populer</a></li>

@@ -64,4 +64,10 @@ class AndroidController extends MasterController
 	  }
 	return $newfilename;
   }
+  public function androidmendaftar(Request $request) {
+    return $this->mendaftar($request);
+  }
+  public function androidlogin(Request $request) {
+    return $this->ceklogin($request);
+  }
 }

@@ -13,5 +13,7 @@ class VerifyCsrfToken extends BaseVerifier
      */
     protected $except = [
         'android/berita-add'
+        ,'android/mendaftar'
+        ,'android/ceklogin'
     ];
 }
