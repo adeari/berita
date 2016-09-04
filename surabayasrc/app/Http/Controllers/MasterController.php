@@ -63,8 +63,7 @@ class MasterController extends BaseController
       return 1;
     } else if (Auth::attempt(array('nik' => $request->usernamenik, 'password' => $request->password))) {
       return 1;
-    } else {
-      return 'Salah Input';
     }
+    return 0;
   }
 }

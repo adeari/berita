@@ -4,6 +4,7 @@ use App\Http\Controllers\MasterController;
 use Illuminate\Http\Request;
 use App\tables\TbBerita;
 use URL;
+use Auth;
 
 class AndroidController extends MasterController
 {
@@ -68,6 +69,9 @@ class AndroidController extends MasterController
     return $this->mendaftar($request);
   }
   public function androidlogin(Request $request) {
-    return $this->ceklogin($request);
+    if ($this->ceklogin($request) == 1) {
+      return ['userid' => Auth::user()->id, 'success' => '1'];
+    }
+    return ['userid' => '', 'success' => '0'];
   }
 }

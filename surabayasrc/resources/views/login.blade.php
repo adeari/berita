@@ -102,8 +102,8 @@ var vue = new Vue({
 		    if (response.body == 1) {
 		      location = '/';
 		    } else {
-		      validator.mark( $('#usernamenik'), response.body);
-		      validator.mark( $('#password'), response.body);
+		      validator.mark( $('#usernamenik'), 'Tidak sesuai');
+		      validator.mark( $('#password'), 'Tidak sesuai');
 		    }
 		    elem.simpanbuttonshow = true;
 		    elem.loadingshow = false;
