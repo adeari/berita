@@ -15,5 +15,8 @@ class VerifyCsrfToken extends BaseVerifier
         'android/berita-add'
         ,'android/mendaftar'
         ,'android/ceklogin'
+        ,'android/berita-deleted'
+        ,'android/komentar-add'
+        ,'android/komentar-deleted'
     ];
 }

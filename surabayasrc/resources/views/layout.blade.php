@@ -31,11 +31,17 @@
             <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
             	<ul class="nav side-menu">
 @if (Auth::check())
-  <li><a href="{{ URL::to('logout') }}"><i class="fa fa-sign-out"></i> Logout</a>
+  <li><a><i class="fa fa-certificate"></i> Pengaturan<span class="fa fa-chevron-down"></span></a>
+      <ul class="nav child_menu">
+	  <li><a href="berita-add"><i class="fa fa-plus"></i> Tambah berita</a></li>
+	  <li><a href="{{ URL::to('logout') }}"><i class="fa fa-sign-out"></i> Logout</a>
+      </ul>
+  </li>
 @else
   <li v-bind:class="{ 'active': isloginactive }"><a href="{{ URL::to('login') }}"><i class="fa fa-key"></i> Login</a>
 @endif	
                 </li>
+                
             	<li v-bind:class="{ 'active': isberitaactive }"><a><i class="fa fa-star-o"></i> Berita <span class="fa fa-chevron-down"></span></a>
 					<ul class="nav child_menu" v-bind:style="beritastyle">
                       	<li v-bind:class="{ 'current-page': populer }"><a href="{{ URL::to('populer') }}"><i class="fa fa-trophy"></i> Populer</a></li>
@@ -50,11 +56,7 @@
                       	<li v-bind:class="{ 'current-page': androidpage }"><a href="{{ URL::to('androidpage') }}"><i class="fa fa-android"></i> Android</a></li>
                     </ul>
                 </li>
-                <li><a><i class="fa fa-certificate"></i> Pengaturan<span class="fa fa-chevron-down"></span></a>
-					<ul class="nav child_menu">
-                      	<li><a href="berita-add"><i class="fa fa-plus"></i> Tambah berita</a></li>
-                    </ul>
-                </li>
+                
                 </ul>
             </div>
             <!-- /sidebar menu -->

@@ -159,7 +159,6 @@
 @endsection
 @section('javascript')
 <script>
-      // validate a field on "blur" event, a 'select' on 'change' event & a '.reuired' classed multifield on 'keyup':
       $('form')
         .on('blur', 'input[required], input.optional, select.required', validator.checkField)
         .on('change', 'select.required', validator.checkField)
@@ -259,10 +258,10 @@
 				},
 				onsubmit: function(evue) {
 				  elem = this;
-				  elem.cansave = false;
 				  csrf = '{!! csrf_token() !!}';
 				  if (validator.checkAll($('#formdata'))) {
 				  if (this.cansave) {
+				    elem.cansave = false;
 					    var form = document.querySelector('#imageberita');
 				    var file = form.files[0];
 					    var oData = new FormData();
