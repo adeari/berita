@@ -196,20 +196,35 @@ class AndroidController extends MasterController
   
   public function komentaradd(Request $request) {
     if ($this->ceklogin($request) == 1) {
-      
-      $tbkomentar = new TbKomentar();
+    if (empty($request->idkomentar)) {
+	$tbkomentar = new TbKomentar();
+	$tbkomentar->idberita = $request->idberita;
+      } else {
+	$tbkomentar = TbKomentar::find($request->idkomentar);
+	$imagedirectory = 'public/image/';
+	if (($request->imageaction == 'hapus' || $request->imageaction == 'ubah') && !is_null($tbkomentar->gambar)
+	  && !empty($tbkomentar->gambar) && file_exists($imagedirectory.$tbkomentar->gambar) ) {
+	  unlink($imagedirectory.$tbkomentar->gambar);
+	}
+      }
       
       $tbkomentar->useridinput = Auth::user()->id;
       $tbkomentar->komentar = $request->komentar;
-      $tbkomentar->idberita = $request->idberita;
-      
-      if (is_null($request->gambar) || empty($request->gambar)) {
+            
+      if (!empty($request->input('gambar'))) {
+	$tbkomentar->gambar = $request->input('gambar');
+      } else if (empty($request->imageaction) && empty($request->idkomentar)) {
 	$tbkomentar->gambar = null;
-      } else {
-	$tbkomentar->gambar = $request->gambar;
+      } else if (!empty($request->imageaction) && !empty($request->idkomentar)
+	&& $request->imageaction == 'hapus') {
+	$tbkomentar->gambar = null;
       }
       
-      $tbkomentar->save();
+      if (empty($request->idkomentar)) {
+	$tbkomentar->save();
+      } else {
+	$tbkomentar->update();
+      }
       return '1';
     }
     return '0';

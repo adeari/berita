@@ -101,4 +101,7 @@ class SurabayaAwalController extends MasterController
   public function daftar() {
     return view('daftar');
   }
+  public function androidpage() {
+	  return view('androidpage');
+	}
 }

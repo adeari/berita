@@ -93,9 +93,4 @@ class SurabayaUserLoginController extends MasterController
 				, 'backpage' => $backpage
 		]);
 	}
-	public function androidpage() {
-	  return view('androidpage');
-	}
-	
-	
 }
