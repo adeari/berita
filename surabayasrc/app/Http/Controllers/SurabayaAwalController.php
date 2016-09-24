@@ -87,6 +87,12 @@ class SurabayaAwalController extends MasterController
       }
       return view('login', $variable);
     }
+    
+    public function beritadetail($id, $backpage = '') {
+		return view('beritadetail', ['berita' => TbBerita::find($id)
+				, 'backpage' => $backpage
+		]);
+	}
 	
   public function mendaftarweb(Request $request) {
 	  return $this->mendaftar($request);

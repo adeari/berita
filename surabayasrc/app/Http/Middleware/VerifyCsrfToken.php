@@ -18,5 +18,7 @@ class VerifyCsrfToken extends BaseVerifier
         ,'android/berita-deleted'
         ,'android/komentar-add'
         ,'android/komentar-deleted'
+        ,'android/profileuseredit'
+        ,'android/profilegantipassword'
     ];
 }

@@ -88,9 +88,5 @@ class SurabayaUserLoginController extends MasterController
 		}
 		return $return;
 	}
-	public function beritadetail($id, $backpage = '') {
-		return view('beritadetail', ['berita' => TbBerita::find($id)
-				, 'backpage' => $backpage
-		]);
-	}
+	
 }

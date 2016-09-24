@@ -50,6 +50,7 @@ class MasterController extends BaseController
 	  } else {
 	    User::create([
 	      'username' => $request->usernamenik,
+	      'name' => $request->usernamenik,
 	      'nik' => $request->usernamenik,
 	      'password' => bcrypt($request->password),
 	      'email' => $request->email,

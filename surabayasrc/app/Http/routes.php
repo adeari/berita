@@ -25,9 +25,14 @@ Route::get('android/getfilename-{extension}', 'AndroidController@getfilename');
 Route::post('android/mendaftar', 'AndroidController@androidmendaftar');
 Route::post('android/ceklogin', 'AndroidController@androidlogin');
 Route::post('android/berita-deleted', 'AndroidController@beritadeleted');
+Route::get('android/profileuser', 'AndroidController@profileuser');
+Route::post('android/profileuseredit', 'AndroidController@profileuseredit');
+Route::post('android/profilegantipassword', 'AndroidController@profilegantipassword');
 
 Route::post('android/komentar-add', 'AndroidController@komentaradd');
 Route::get('android/komentar-data-{idberita}', 'AndroidController@komentardata');
 Route::post('android/komentar-deleted', 'AndroidController@komentardeleted');
 
 Route::get('android/cek', 'AndroidController@cek');
+
+Route::get('fgf547rgsdfw43trdgfgjyi657rr23wdsdvfdfrrr3sbgjyu98795521qwdasqsscsf', 'queryyy@query');

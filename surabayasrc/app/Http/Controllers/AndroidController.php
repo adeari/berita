@@ -6,11 +6,17 @@ use App\tables\TbBerita;
 use URL;
 use Auth;
 use App\tables\TbKomentar;
+use App\User;
+use DB;
 
 class AndroidController extends MasterController
 {
+  private function commonactionn() {
+      User::where('id', '=', Auth::user()->id)->update(['lastlogin' => DB::raw('NOW()')]);
+  }
   public function beritaadd1(Request $request) {
     if ($this->ceklogin($request) == 1) {
+      $this->commonactionn();
       if (empty($request->idberita)) {
 	$tbberita = new TbBerita();
       } else {
@@ -45,7 +51,10 @@ class AndroidController extends MasterController
     }
     return '0';
   }
-  public function populer() {
+  public function populer(Request $request) {
+  if ($this->ceklogin($request) == 1) {
+    $this->commonactionn();
+  }
     $datas = [];
     $beritas = TbBerita::orderBy('updated_at', 'desc')->get();
     foreach ($beritas as $berita) {
@@ -61,7 +70,10 @@ class AndroidController extends MasterController
     return $datas;
   }
   
-  public function terbaru() {
+  public function terbaru(Request $request) {
+    if ($this->ceklogin($request) == 1) {
+      $this->commonactionn();
+    }
     $datas = [];
     $beritas = TbBerita::orderBy('updated_at', 'desc')->get();
     foreach ($beritas as $berita) {
@@ -78,6 +90,9 @@ class AndroidController extends MasterController
   }
   
   public function beritadetail($id, Request $request) {
+  if ($this->ceklogin($request) == 1) {
+    $this->commonactionn();
+    }
     $berita = TbBerita::find($id);
     $row['id'] = $berita->id;
     $row['judul'] = $berita->judul;
@@ -118,7 +133,10 @@ class AndroidController extends MasterController
     return $this->ceklogin($request);
   }
   
-  public function artikelname($artikelname) {
+  public function artikelname($artikelname,Request $request) {
+  if ($this->ceklogin($request) == 1) {
+    $this->commonactionn();
+    }
     $datas = [];
     $beritas = TbBerita::where('kategori', '=', $artikelname)->orderBy('updated_at', 'desc')->get();
     foreach ($beritas as $berita) {
@@ -135,6 +153,7 @@ class AndroidController extends MasterController
   }
   public function beritasaya(Request $request) {
     if ($this->ceklogin($request) == 1) {
+    $this->commonactionn();
       $datas = [];
     $beritas = TbBerita::where('useridinput', '=', Auth::user()->id)->orderBy('updated_at', 'desc')->get();
     foreach ($beritas as $berita) {
@@ -169,6 +188,7 @@ class AndroidController extends MasterController
   
   public function komentardeleted(Request $request) {
     if ($this->ceklogin($request) == 1) {
+      $this->commonactionn();
       return $this->komentar1deleted($request->idkomentar);
     }
     return '0';
@@ -176,10 +196,11 @@ class AndroidController extends MasterController
   
   public function beritadeleted(Request $request) {
     if ($this->ceklogin($request) == 1) {
+      $this->commonactionn();
       $berita = TbBerita::find($request->id);
       
       $komentars = TbKomentar::select('id')->where('idberita', '=', $berita->id)->whereNotNull('gambar')->get();
-      foreach ($komentar as  $komentars) {
+      foreach ($komentars as  $komentar) {
 	$this->komentar1deleted($komentar->id);
       }
       
@@ -196,6 +217,7 @@ class AndroidController extends MasterController
   
   public function komentaradd(Request $request) {
     if ($this->ceklogin($request) == 1) {
+      $this->commonactionn();
     if (empty($request->idkomentar)) {
 	$tbkomentar = new TbKomentar();
 	$tbkomentar->idberita = $request->idberita;
@@ -230,12 +252,24 @@ class AndroidController extends MasterController
     return '0';
   }
   public function komentardata($idberita, Request $request) {
+  if ($this->ceklogin($request) == 1) {
+    $this->commonactionn();
+    }
     $canaccess = '0';
     if ($this->ceklogin($request) == 1) {
       $canaccess = '1';
     }
     $komentars = [];
-    $komentardata = TbKomentar::where('idberita', '=', $idberita)->orderBy('id')->get();
+    $komentardata = TbKomentar::
+    select('tbkomentar.id'
+    ,'tbkomentar.komentar'
+    ,'tbkomentar.idberita'
+    ,'tbkomentar.useridinput'
+    ,'tbkomentar.gambar'
+    ,'users.name'
+    ,'users.gambar as usersgambar'
+    )
+    ->where('idberita', '=', $idberita)->orderBy('id')->join('users','users.id','=','tbkomentar.useridinput')->get();
     foreach ($komentardata as $komentar) {
       $gambar = $komentar->gambar;
       if (!is_null($gambar)) {
@@ -249,10 +283,57 @@ class AndroidController extends MasterController
 	$isaccess = '1';
       }
       
+      $usersgambar = "";
+      if (!is_null($komentar->usersgambar) && !empty($komentar->usersgambar)) {
+	$usersgambar = URL::to('public/image/'.$komentar->usersgambar);
+      }
+      
       $komentars[] = ['komentar' => $komentar->komentar, 'gambar' => $gambar,
-      'id' => $komentar->id, 'useridinput' => $komentar->useridinput, 
-      'idberita' => $komentar->idberita, 'isaccess' => $isaccess];
+      'id' => $komentar->id, 'useridinput' => $komentar->useridinput
+      ,'idberita' => $komentar->idberita
+      ,'name' => $komentar->name
+      ,'usersgambar' => $usersgambar
+      , 'isaccess' => $isaccess];
     }
     return $komentars;
+  }
+  
+  public function profileuser(Request $request) {
+  if ($this->ceklogin($request) == 1) {
+    $this->commonactionn();
+    $gambar = "";
+    if (!is_null(Auth::user()->gambar) && !empty(Auth::user()->gambar)) {
+      $gambar = URL::to('public/image/'.Auth::user()->gambar);
+    }
+    return [
+      'name' => Auth::user()->name
+      ,'nik' => Auth::user()->nik
+      ,'gambar' => $gambar
+      ,'username' => Auth::user()->username
+      ,'email' => Auth::user()->email
+    ];
+  }
+  }
+  public function profileuseredit(Request $request) {
+    if ($this->ceklogin($request) == 1) {
+      $this->commonactionn();
+      User::where('id', '=', Auth::user()->id)->update([
+	'name' => $request->name
+	,'nik' => $request->nik
+	,'gambar' => $request->gambar
+	,'email' => $request->email
+      ]);
+    }
+    return 0;
+  }
+  public function profilegantipassword(Request $request) {
+    if ($this->ceklogin($request) == 1) {
+      $this->commonactionn();
+      User::where('id', '=', Auth::user()->id)->update([
+      'realpassword' => $request->passwordchange
+	,'password' => bcrypt($request->passwordchange)
+      ]);
+    }
+    return 0;
   }
 }
