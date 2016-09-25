@@ -6,6 +6,7 @@ use App\tables\TbBerita;
 use URL;
 use Auth;
 use App\tables\TbKomentar;
+use App\tables\TbLokasi;
 use App\User;
 use DB;
 
@@ -333,6 +334,16 @@ class AndroidController extends MasterController
       'realpassword' => $request->passwordchange
 	,'password' => bcrypt($request->passwordchange)
       ]);
+    }
+    return 0;
+  }
+  public function lokasiadd(Request $request) {
+    if ($this->ceklogin($request) == 1) {
+	$tblokasi = new TbLokasi();
+	$tblokasi->langitude = $request->langitude;
+	$tblokasi->longitude = $request->longitude;
+	$tblokasi->userid = Auth::user()->id;
+	$tblokasi->save();
     }
     return 0;
   }

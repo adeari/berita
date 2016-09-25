@@ -11,6 +11,8 @@ Route::post('mendaftar', 'SurabayaAwalController@mendaftarweb');
 Route::post('ceklogin', 'SurabayaAwalController@cekloginweb');
 Route::get('logout', 'SurabayaAwalController@logout');
 
+Route::get('map', 'SurabayaAwalController@map');
+
 Route::get('berita-add', 'SurabayaUserLoginController@beritaadd');
 Route::post('uploadfile', 'SurabayaUserLoginController@uploadfile');
 Route::post('addberita', 'SurabayaUserLoginController@addberita');
@@ -32,6 +34,7 @@ Route::post('android/profilegantipassword', 'AndroidController@profilegantipassw
 Route::post('android/komentar-add', 'AndroidController@komentaradd');
 Route::get('android/komentar-data-{idberita}', 'AndroidController@komentardata');
 Route::post('android/komentar-deleted', 'AndroidController@komentardeleted');
+Route::post('android/lokasiadd', 'AndroidController@lokasiadd');
 
 Route::get('android/cek', 'AndroidController@cek');
 

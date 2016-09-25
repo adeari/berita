@@ -20,5 +20,6 @@ class VerifyCsrfToken extends BaseVerifier
         ,'android/komentar-deleted'
         ,'android/profileuseredit'
         ,'android/profilegantipassword'
+        ,'android/lokasiadd'
     ];
 }

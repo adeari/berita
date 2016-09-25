@@ -110,4 +110,7 @@ class SurabayaAwalController extends MasterController
   public function androidpage() {
 	  return view('androidpage');
 	}
+  public function map(){
+    return view('map');
+  }
 }
