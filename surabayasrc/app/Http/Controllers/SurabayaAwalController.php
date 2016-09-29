@@ -6,6 +6,7 @@ use App\tables\TbBerita;
 use URL;
 use Auth;
 use App\User;
+use App\tables\TbLokasi;
 
 class SurabayaAwalController extends MasterController
 {
@@ -111,6 +112,7 @@ class SurabayaAwalController extends MasterController
 	  return view('androidpage');
 	}
   public function map(){
-    return view('map');
+    $tblokasi = TbLokasi::join('users', 'users.id', '=', 'tblokasi.userid')->get();
+    return view('map', ['datamaps' => $tblokasi]);
   }
 }

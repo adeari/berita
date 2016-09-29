@@ -17,6 +17,9 @@ Route::get('berita-add', 'SurabayaUserLoginController@beritaadd');
 Route::post('uploadfile', 'SurabayaUserLoginController@uploadfile');
 Route::post('addberita', 'SurabayaUserLoginController@addberita');
 
+Route::get('saya', 'SurabayaUserLoginController@saya');
+Route::post('changepassword', 'SurabayaUserLoginController@changepassword');
+
 Route::post('android/berita-add', 'AndroidController@beritaadd1');
 Route::get('android/populer', 'AndroidController@populer');
 Route::get('android/terbaru', 'AndroidController@terbaru');

@@ -12,9 +12,6 @@ use DB;
 
 class AndroidController extends MasterController
 {
-  private function commonactionn() {
-      User::where('id', '=', Auth::user()->id)->update(['lastlogin' => DB::raw('NOW()')]);
-  }
   public function beritaadd1(Request $request) {
     if ($this->ceklogin($request) == 1) {
       $this->commonactionn();
@@ -330,10 +327,7 @@ class AndroidController extends MasterController
   public function profilegantipassword(Request $request) {
     if ($this->ceklogin($request) == 1) {
       $this->commonactionn();
-      User::where('id', '=', Auth::user()->id)->update([
-      'realpassword' => $request->passwordchange
-	,'password' => bcrypt($request->passwordchange)
-      ]);
+      $this->gantipassword($request);
     }
     return 0;
   }

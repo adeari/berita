@@ -4,6 +4,7 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
 use Auth;
 use App\User;
+use DB;
 
 class MasterController extends BaseController
 {
@@ -66,5 +67,14 @@ class MasterController extends BaseController
       return 1;
     }
     return 0;
+  }
+  public function commonactionn() {
+      User::where('id', '=', Auth::user()->id)->update(['lastlogin' => DB::raw('NOW()')]);
+  }
+  public function gantipassword($request) {
+    User::where('id', '=', Auth::user()->id)->update([
+      'realpassword' => $request->passwordchange
+	,'password' => bcrypt($request->passwordchange)
+      ]);
   }
 }

@@ -21,8 +21,12 @@
     <script>
       map = new google.maps.Map(document.getElementById('map'), {
 	center: {lat: -7.33432572, lng: 112.6365496},
-	zoom: 7
+	zoom: 10
       });
+@foreach ($datamaps as $datamap)
+      new google.maps.Marker({position: new google.maps.LatLng({{ $datamap->langitude }}, {{ $datamap->longitude }}), icon:'http://maps.google.com/mapfiles/ms/icons/blue-dot.png', title: '{{ $datamap->name }}', map: map });
+@endforeach
+      
     </script>
   </body>
 </html>

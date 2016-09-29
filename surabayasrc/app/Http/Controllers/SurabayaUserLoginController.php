@@ -12,6 +12,7 @@ class SurabayaUserLoginController extends MasterController
   public function __construct()
   {
     $this->middleware('auth');
+    $this->commonactionn();
   }
   public function beritaadd() {
     	return view('user.beritaadd');
@@ -88,5 +89,11 @@ class SurabayaUserLoginController extends MasterController
 		}
 		return $return;
 	}
-	
+  public function saya() {
+    return view('user.saya', ['profile' => Auth::user()]);
+  }
+  
+  public function changepassword(Request $request) {
+    $this->gantipassword($request);
+  }
 }
