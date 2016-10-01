@@ -24,7 +24,7 @@ class SurabayaUserLoginController extends MasterController
     	
     	foreach($_FILES as $file)
     	{
-    		$folderupload = 'public/image/';
+    		$folderupload = public_path().'/image/';
     		$sizefile = $file['size'];
     		$filename = $file['name'];
     		
@@ -62,8 +62,9 @@ class SurabayaUserLoginController extends MasterController
     				}
     			}
     			$pathnewfilename = $folderupload.$newfilename;
-    			move_uploaded_file($file['tmp_name'], $pathnewfilename);
     			$return['filename'] = $newfilename;
+    			move_uploaded_file($file['tmp_name'], $pathnewfilename);
+    			$this->resizeimage($pathnewfilename);
     		} else {
     			$return['success'] = '0' ;
     			$return['msg'] = 'Upload file gambar saja';
@@ -71,6 +72,41 @@ class SurabayaUserLoginController extends MasterController
     		}
     	}
     	return $return;
+    }
+    
+    private function resizeimage($pathnewfilename) {
+      if (!empty($pathnewfilename) && file_exists($pathnewfilename)) {
+	$image_info = getimagesize($pathnewfilename);
+	$standradwidth = $image_info[0];
+	$standardheight = $image_info[1];
+	$imagetype = $image_info[2];
+	
+	$width = 500;
+	if ($width < $standradwidth) {
+	  $height = $width * $standardheight / $standradwidth;
+	  if ($imagetype == IMAGETYPE_JPEG) {
+	    $image = imagecreatefromjpeg($pathnewfilename);
+	    $newImage = imagecreatetruecolor($width, $height);
+	    imagecopyresampled($newImage, $image, 0, 0, 0, 0, $width, $height, $standradwidth, $standardheight);
+	    imagejpeg($newImage, $pathnewfilename, 100);
+	  } else if ($imagetype == IMAGETYPE_PNG) {
+	    $image = imagecreatefrompng($pathnewfilename);
+	    $newImage = imagecreatetruecolor($width, $height);
+	    imagecopyresampled($newImage, $image, 0, 0, 0, 0, $width, $height, $standradwidth, $standardheight);
+	    imagepng($newImage, $pathnewfilename, 100);
+	  } else if ($imagetype == IMAGETYPE_BMP) {
+	    $image = imagecreatefromwbmp($pathnewfilename);
+	    $newImage = imagecreatetruecolor($width, $height);
+	    imagecopyresampled($newImage, $image, 0, 0, 0, 0, $width, $height, $standradwidth, $standardheight);
+	    imagewbmp($newImage, $pathnewfilename, 100);
+	  } else if ($imagetype == IMAGETYPE_GIF) {
+	    $image = imagecreatefromgif($pathnewfilename);
+	    $newImage = imagecreatetruecolor($width, $height);
+	    imagecopyresampled($newImage, $image, 0, 0, 0, 0, $width, $height, $standradwidth, $standardheight);
+	    imagegif($newImage, $pathnewfilename, 100);
+	  }
+	}
+      }
     }
     
 	public function addberita(Request $request) {
@@ -90,10 +126,26 @@ class SurabayaUserLoginController extends MasterController
 		return $return;
 	}
   public function saya() {
-    return view('user.saya', ['profile' => Auth::user()]);
+    return view('user.saya', ['profile' => User::find(Auth::user()->id)]);
   }
   
   public function changepassword(Request $request) {
     $this->gantipassword($request);
+  }
+  public function changeprofile(Request $request) {
+    $return = $this->uploadfile();
+    if ($return['success'] == '1') {
+      $request->gambar = (is_null($return['filename']) ? '' : $return['filename']);
+      $user = User::find(Auth::user()->id);
+      $deletedimage = '';
+      if (!empty($request->gambar) && !empty($user->gambar) && file_exists(public_path().'/image/'.$user->gambar)) {
+	$deletedimage = public_path().'/image/'.$user->gambar;
+      }
+      $this->editprofile($request);
+      if (!empty($deletedimage)) {
+	unlink($deletedimage);
+      }
+    }
+    return $return;
   }
 }

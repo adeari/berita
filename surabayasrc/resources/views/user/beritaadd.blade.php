@@ -110,7 +110,7 @@
                 </div>
               </div>
             </div>
-<div class="demo" style="display:none;" v-show="loadingshow">
+<div class="demo" v-show="loadingshow">
   <svg class="loader">
     <filter id="blur">
       <fegaussianblur in="SourceGraphic" stddeviation="2"></fegaussianblur>
@@ -237,6 +237,7 @@
 				cansave:true,
 				loadingshow: false,
 				simpanbuttonshow: true,
+				saveimage: false,
 			},
 			methods:{
 				onchangeimage: function(evue) {
@@ -249,9 +250,10 @@
 				    	}
 				    	this.imageberitashow = true;
 				    	validator.unmark( $('#imageberita'));
-				    	this.cansave = true;
+				    	this.saveimage = true;
 					} else {
-					this.cansave = false;
+					this.saveimage = false;
+					this.imageberitashow = false;
 						this.imageberitashow = false;
 						validator.mark( $('#imageberita'), 'Gambar Maksimal 2MB');
 					}
@@ -265,7 +267,9 @@
 					    var form = document.querySelector('#imageberita');
 				    var file = form.files[0];
 					    var oData = new FormData();
-				    oData.append('image', file);
+				    if (this.saveimage) {
+				      oData.append('image', file);
+				    }
 				    oData.append('_token', csrf);
 				    oData.append('judul', this.judul);
 				    oData.append('deskripsi', $('#editor').html());

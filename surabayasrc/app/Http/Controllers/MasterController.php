@@ -77,4 +77,12 @@ class MasterController extends BaseController
 	,'password' => bcrypt($request->passwordchange)
       ]);
   }
+  public function editprofile($request) {
+    User::where('id', '=', Auth::user()->id)->update([
+      'name' => $request->name
+      ,'nik' => $request->nik
+      ,'gambar' => $request->gambar
+      ,'email' => $request->email
+    ]);
+  }
 }

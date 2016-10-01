@@ -315,12 +315,7 @@ class AndroidController extends MasterController
   public function profileuseredit(Request $request) {
     if ($this->ceklogin($request) == 1) {
       $this->commonactionn();
-      User::where('id', '=', Auth::user()->id)->update([
-	'name' => $request->name
-	,'nik' => $request->nik
-	,'gambar' => $request->gambar
-	,'email' => $request->email
-      ]);
+      $this->editprofile($request);
     }
     return 0;
   }
