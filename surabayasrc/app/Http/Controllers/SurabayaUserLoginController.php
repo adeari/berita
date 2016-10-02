@@ -2,7 +2,10 @@
 
 use App\Http\Controllers\MasterController;
 use Illuminate\Http\Request;
+
 use App\tables\TbBerita;
+use App\tables\TbKomentar;
+
 use URL;
 use Auth;
 use App\User;
@@ -14,8 +17,12 @@ class SurabayaUserLoginController extends MasterController
     $this->middleware('auth');
     $this->commonactionn();
   }
-  public function beritaadd() {
-    	return view('user.beritaadd');
+  public function beritaadd(Request $request) {
+      $beritaedit = null;
+      if (isset($request->id)) {
+	$beritaedit = TbBerita::find($request->id);
+      }
+    	return view('user.beritaadd', ['beritaedit' => $beritaedit]);
     }
     public function uploadfile() {
     	$return['success'] = '1' ;
@@ -112,16 +119,38 @@ class SurabayaUserLoginController extends MasterController
 	public function addberita(Request $request) {
 		$return = $this->uploadfile();
 		if ($return['success'] == '1') {
+		  $deletedfile = '';
 			$filename = $return['filename'];
-			$tbberita = new TbBerita();
+			if (empty($request->beritaid)) {
+			  $tbberita = new TbBerita();
+			} else {
+			  $tbberita = TbBerita::find($request->beritaid);
+			  if (!empty($request->hapusimage) && !is_null($tbberita->filename)) {
+			    $deletedfile = $tbberita->filename;
+			  }
+			}
+			
 			$tbberita->judul = $this->removeUnusedCharacter($request->input('judul'));
 			$tbberita->deskripsi = $this->removeUnusedCharacter($request->input('deskripsi'));
 			$tbberita->kategori = $this->removeUnusedCharacter($request->input('kategori'));
 			$tbberita->useridinput = Auth::User()->id;
 			if (!is_null($filename)) {
-				$tbberita->filename = $filename;
+			  if (!empty($request->beritaid) && !is_null($tbberita->filename)) {
+			    $deletedfile = $tbberita->filename;
+			  }
+			  $tbberita->filename = $filename;
 			}
-			$tbberita->save();
+			if (!empty($request->hapusimage)) {
+			  $tbberita->filename = null;
+			}
+			if (empty($request->beritaid)) {
+			  $tbberita->save();
+			} else {
+			  $tbberita->update();
+			}
+		  if (!empty($deletedfile) && file_exists(public_path().'/image/'.$deletedfile)) {
+		    unlink(public_path().'/image/'.$deletedfile);
+		  }
 		}
 		return $return;
 	}
@@ -145,6 +174,49 @@ class SurabayaUserLoginController extends MasterController
       if (!empty($deletedimage)) {
 	unlink($deletedimage);
       }
+    }
+    return $return;
+  }
+  public function beritasaya() {
+    $beritas = '';
+    $databeritas = TbBerita::orderBy('id', 'desc')->where('useridinput', '=', Auth::user()->id)->get();
+    $folderimage = 'public/image';
+    foreach ($databeritas as $databerita) {
+	    $filename = $databerita->filename;
+	    if (!is_null($filename)) {
+		    $pathfilename =  $folderimage.'/'.$filename;
+		    $filename = URL::to($pathfilename);
+	    }
+	    if (strlen($beritas) > 0) {
+		    $beritas .= ',';
+	    }
+	    $tanggal = substr($databerita->updated_at, 8, 2).'/'.substr($databerita->updated_at, 5, 2).'/'.substr($databerita->updated_at, 0, 4).substr($databerita->updated_at, 10, 6);
+	    $beritas .= '{id:'.$databerita->id.', filename:\''.$filename.'\', judul:\''.$this->setlinestring($databerita->judul).'\', deskripsi: \''.$this->setlinestring($databerita->deskripsi).'\'
+	    ,showhapusbutton:true
+	    ,showlayoutconfirmhapus:false
+			    ,tanggal:\''.$tanggal.'\'}';
+    }
+    return view('user.beritasaya', [
+		    'beritas' => $beritas
+		    , 'backpage' => 'berita-saya'
+    ]);
+  }
+  public function beritahapus(Request $request) {
+    $this->deleteberita($request);
+    return 1;
+  }
+  
+  public function addkomentar(Request $request) {
+    $return = $this->uploadfile();
+    if ($return['success'] == '1') {
+      $tbkomentar = new TbKomentar();
+      $tbkomentar->idberita = $request->idberita;
+      $tbkomentar->useridinput = Auth::user()->id;
+      $tbkomentar->komentar = $request->komentar;
+      if (!is_null($return['filename'])) {
+	$tbkomentar->gambar = $return['filename'];
+      }
+      $tbkomentar->save();
     }
     return $return;
   }

@@ -175,14 +175,6 @@ class AndroidController extends MasterController
     }
     return '0';
   }
-  private function komentar1deleted($komentarid) {
-      $komentar = TbKomentar::find($komentarid);
-      if (!is_null($komentar->gambar) && !empty($komentar->gambar) && file_exists('public/image/'.$komentar->gambar)) {
-	unlink('public/image/'.$komentar->gambar);
-      }
-      $komentar->delete();
-      return '1';
-  }
   
   public function komentardeleted(Request $request) {
     if ($this->ceklogin($request) == 1) {
@@ -195,19 +187,7 @@ class AndroidController extends MasterController
   public function beritadeleted(Request $request) {
     if ($this->ceklogin($request) == 1) {
       $this->commonactionn();
-      $berita = TbBerita::find($request->id);
-      
-      $komentars = TbKomentar::select('id')->where('idberita', '=', $berita->id)->whereNotNull('gambar')->get();
-      foreach ($komentars as  $komentar) {
-	$this->komentar1deleted($komentar->id);
-      }
-      
-      TbKomentar::where('idberita', '=', $berita->id)->delete();
-      
-      if (!is_null($berita->filename) && !empty($berita->filename) && file_exists('public/image/'.$berita->filename)) {
-	unlink('public/image/'.$berita->filename);
-      }
-      $berita->delete();
+      $this->deleteberita($request);
       return '1';
     }
     return '0';
@@ -257,43 +237,7 @@ class AndroidController extends MasterController
     if ($this->ceklogin($request) == 1) {
       $canaccess = '1';
     }
-    $komentars = [];
-    $komentardata = TbKomentar::
-    select('tbkomentar.id'
-    ,'tbkomentar.komentar'
-    ,'tbkomentar.idberita'
-    ,'tbkomentar.useridinput'
-    ,'tbkomentar.gambar'
-    ,'users.name'
-    ,'users.gambar as usersgambar'
-    )
-    ->where('idberita', '=', $idberita)->orderBy('id')->join('users','users.id','=','tbkomentar.useridinput')->get();
-    foreach ($komentardata as $komentar) {
-      $gambar = $komentar->gambar;
-      if (!is_null($gambar)) {
-	$gambar = URL::to('public/image/'.$gambar);
-      } else {
-	$gambar = '';
-      }
-      
-      $isaccess = '0';
-      if ($canaccess == '1' && $komentar->useridinput == Auth::user()->id) {
-	$isaccess = '1';
-      }
-      
-      $usersgambar = "";
-      if (!is_null($komentar->usersgambar) && !empty($komentar->usersgambar)) {
-	$usersgambar = URL::to('public/image/'.$komentar->usersgambar);
-      }
-      
-      $komentars[] = ['komentar' => $komentar->komentar, 'gambar' => $gambar,
-      'id' => $komentar->id, 'useridinput' => $komentar->useridinput
-      ,'idberita' => $komentar->idberita
-      ,'name' => $komentar->name
-      ,'usersgambar' => $usersgambar
-      , 'isaccess' => $isaccess];
-    }
-    return $komentars;
+    return $this->getkomentardata($canaccess, $idberita);
   }
   
   public function profileuser(Request $request) {

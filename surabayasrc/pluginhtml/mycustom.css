@@ -69,3 +69,6 @@
             transform: scale(0.5);
   }
 }
+.usernamekomentar {
+ font-weight:bold;font-style=italic;font-size:13px;color:blue; 
+}

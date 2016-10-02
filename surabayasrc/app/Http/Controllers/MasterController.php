@@ -5,6 +5,11 @@ use Illuminate\Http\Request;
 use Auth;
 use App\User;
 use DB;
+use URL;
+
+use App\tables\TbKomentar;
+use App\tables\TbLokasi;
+use App\tables\TbBerita;
 
 class MasterController extends BaseController
 {
@@ -69,7 +74,9 @@ class MasterController extends BaseController
     return 0;
   }
   public function commonactionn() {
-      User::where('id', '=', Auth::user()->id)->update(['lastlogin' => DB::raw('NOW()')]);
+      if (Auth::check()) {
+	User::where('id', '=', Auth::user()->id)->update(['lastlogin' => DB::raw('NOW()')]);
+      }
   }
   public function gantipassword($request) {
     User::where('id', '=', Auth::user()->id)->update([
@@ -84,5 +91,65 @@ class MasterController extends BaseController
       ,'gambar' => $request->gambar
       ,'email' => $request->email
     ]);
+  }
+  public function deleteberita($request) {
+    $berita = TbBerita::find($request->id);
+    $komentars = TbKomentar::select('id')->where('idberita', '=', $berita->id)->whereNotNull('gambar')->get();
+    foreach ($komentars as  $komentar) {
+      $this->komentar1deleted($komentar->id);
+    }
+    TbKomentar::where('idberita', '=', $berita->id)->delete();
+    if (!is_null($berita->filename) && !empty($berita->filename) && file_exists('public/image/'.$berita->filename)) {
+      unlink('public/image/'.$berita->filename);
+    }
+    $berita->delete();
+  }
+  
+  public function komentar1deleted($komentarid) {
+      $komentar = TbKomentar::find($komentarid);
+      if (!is_null($komentar->gambar) && !empty($komentar->gambar) && file_exists('public/image/'.$komentar->gambar)) {
+	unlink('public/image/'.$komentar->gambar);
+      }
+      $komentar->delete();
+      return '1';
+  }
+  public function getkomentardata($canaccess, $idberita) {
+    $komentars = [];
+    $komentardata = TbKomentar::
+    select('tbkomentar.id'
+    ,'tbkomentar.komentar'
+    ,'tbkomentar.idberita'
+    ,'tbkomentar.useridinput'
+    ,'tbkomentar.gambar'
+    ,'users.name'
+    ,'users.gambar as usersgambar'
+    )
+    ->where('idberita', '=', $idberita)->orderBy('id')->join('users','users.id','=','tbkomentar.useridinput')->get();
+    foreach ($komentardata as $komentar) {
+      $gambar = $komentar->gambar;
+      if (!is_null($gambar)) {
+	$gambar = URL::to('public/image/'.$gambar);
+      } else {
+	$gambar = '';
+      }
+      
+      $isaccess = '0';
+      if ($canaccess == '1' && $komentar->useridinput == Auth::user()->id) {
+	$isaccess = '1';
+      }
+      
+      $usersgambar = "";
+      if (!is_null($komentar->usersgambar) && !empty($komentar->usersgambar)) {
+	$usersgambar = URL::to('public/image/'.$komentar->usersgambar);
+      }
+      
+      $komentars[] = ['komentar' => $komentar->komentar, 'gambar' => $gambar,
+      'id' => $komentar->id, 'useridinput' => $komentar->useridinput
+      ,'idberita' => $komentar->idberita
+      ,'name' => $komentar->name
+      ,'usersgambar' => $usersgambar
+      , 'isaccess' => $isaccess];
+    }
+    return $komentars;
   }
 }

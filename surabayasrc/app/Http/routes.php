@@ -10,12 +10,17 @@ Route::get('daftar', 'SurabayaAwalController@daftar');
 Route::post('mendaftar', 'SurabayaAwalController@mendaftarweb');
 Route::post('ceklogin', 'SurabayaAwalController@cekloginweb');
 Route::get('logout', 'SurabayaAwalController@logout');
+Route::get('komentarlist-{idberita}', 'SurabayaAwalController@komentarlist');
 
 Route::get('map', 'SurabayaAwalController@map');
 
+Route::get('berita-saya', 'SurabayaUserLoginController@beritasaya');
+
+Route::post('berita-hapus', 'SurabayaUserLoginController@beritahapus');
 Route::get('berita-add', 'SurabayaUserLoginController@beritaadd');
 Route::post('uploadfile', 'SurabayaUserLoginController@uploadfile');
 Route::post('addberita', 'SurabayaUserLoginController@addberita');
+Route::post('addkomentar', 'SurabayaUserLoginController@addkomentar');
 
 Route::get('saya', 'SurabayaUserLoginController@saya');
 Route::post('changepassword', 'SurabayaUserLoginController@changepassword');

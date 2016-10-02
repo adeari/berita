@@ -33,6 +33,7 @@
 @if (Auth::check())
   <li><a><i class="fa fa-certificate"></i> Pengaturan<span class="fa fa-chevron-down"></span></a>
       <ul class="nav child_menu">
+	  <li><a href="berita-saya"><i class="fa fa-newspaper-o"></i> Berita Saya</a></li>
 	  <li><a href="berita-add"><i class="fa fa-plus"></i> Tambah berita</a></li>
 	  <li><a href="saya"><i class="fa fa-user"></i> Saya</a></li>
 	  <li><a href="{{ URL::to('logout') }}"><i class="fa fa-sign-out"></i> Logout</a>

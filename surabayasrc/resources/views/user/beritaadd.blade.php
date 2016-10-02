@@ -25,8 +25,9 @@
                     <div class="item form-group">
                         {!! Form::label('imageberita', 'Gambar', ['class' => 'control-label col-md-3 col-sm-3 col-xs-12']) !!}
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          <input name="imageberita" type="file" id="imageberita" @change="onchangeimage">
+                          <input name="imageberita" type="file" id="imageberita" @change="onchangeimage" style="width:300px;">
                           <div v-show="imageberitashow"><br><img src="" id="imagepict" width="260px" height="200px" class="pointer"></div>
+                          {{ Form::button('Hapus Gambar', array('class' => 'btn btn-success', '@click' => 'hapusgambar', 'v-show' => 'viewhhapusbutton')) }}
                         </div>
                       </div>
                       <div class="item form-group">
@@ -103,8 +104,8 @@
                       <a class="btn" data-edit="redo" title="Redo (Ctrl/Cmd+Y)"><i class="fa fa-repeat"></i></a>
                     </div>
                   </div>
-                  <div id="editor" class="editor-wrapper"></div>
-                  {!! Form::textarea('descr', '',['id' => 'descr', 'style' => 'display:none;'])  !!}
+                  <div id="editor" class="editor-wrapper">{{ (is_null($beritaedit) ? '' : $beritaedit->deskripsi) }}</div>
+                  {!! Form::textarea('descr', (is_null($beritaedit) ? '' : $beritaedit->deskripsi),['id' => 'descr', 'style' => 'display:none;'])  !!}
                   <br />
                   <div class="ln_solid"></div>
                 </div>
@@ -151,7 +152,6 @@
                 </div>
               </div>
             </div>
-            
           </div>
         </div>
         <!-- /page content -->
@@ -226,71 +226,91 @@
         window.prettyPrint;
         prettyPrint();
 
-        
-
         var vue = new Vue({
-			el: '#appcontent',
-			data: {
-				imageberitashow: false,
-				judul: '',
-				kategori: '',
-				cansave:true,
-				loadingshow: false,
-				simpanbuttonshow: true,
-				saveimage: false,
-			},
-			methods:{
-				onchangeimage: function(evue) {
-					thefile = evue.target.files[0];
-					if (thefile.size < 2000000) {
-						var readImg = new FileReader();
-				    	readImg.readAsDataURL(evue.target.files[0]);
-				    	readImg.onload = function(e) {
-				    		$('#imagepict').attr('src',e.target.result);
-				    	}
-				    	this.imageberitashow = true;
-				    	validator.unmark( $('#imageberita'));
-				    	this.saveimage = true;
-					} else {
-					this.saveimage = false;
-					this.imageberitashow = false;
-						this.imageberitashow = false;
-						validator.mark( $('#imageberita'), 'Gambar Maksimal 2MB');
-					}
-				},
-				onsubmit: function(evue) {
-				  elem = this;
-				  csrf = '{!! csrf_token() !!}';
-				  if (validator.checkAll($('#formdata'))) {
-				  if (this.cansave) {
-				    elem.cansave = false;
-					    var form = document.querySelector('#imageberita');
-				    var file = form.files[0];
-					    var oData = new FormData();
-				    if (this.saveimage) {
-				      oData.append('image', file);
-				    }
-				    oData.append('_token', csrf);
-				    oData.append('judul', this.judul);
-				    oData.append('deskripsi', $('#editor').html());
-				    oData.append('kategori', this.kategori);
-				    elem.simpanbuttonshow = false;
-				    elem.loadingshow = true;
-				    elem.$http.post('{{ URL::to('addberita') }}',oData).then(function(response){
-					    jsonresponse = JSON.parse(response.body);
-						    if (jsonresponse.msg == 'ErrorException') {
-							    window.location.assign('{{ URL::to('/') }}')
-						    } else {
-							    location = '/';
-						    }
- 						    elem.simpanbuttonshow = true;
- 				    elem.loadingshow = false;
- 				    elem.cansave=true;
-				    });
-				    }
-				  }
-				}
+	    el: '#appcontent',
+	    data: {
+		    imageberitashow: false,
+		    judul: '',
+		    kategori: '',
+		    cansave:true,
+		    loadingshow: false,
+		    simpanbuttonshow: true,
+		    saveimage: false,
+		    beritaid:'',
+		    hapusimage:'',
+		    viewhhapusbutton:false,
+	    },
+	    methods:{
+		    onchangeimage: function(evue) {
+			    thefile = evue.target.files[0];
+			    if (thefile.size < 2000000) {
+			      var readImg = new FileReader();
+			      readImg.readAsDataURL(evue.target.files[0]);
+			      readImg.onload = function(e) {
+				      $('#imagepict').attr('src',e.target.result);
+			      }
+			      this.imageberitashow = true;
+			      validator.unmark( $('#imageberita'));
+			      this.hapusimage = '';
+			      this.viewhhapusbutton = true;
+			      this.saveimage = true;
+			    } else {
+			      this.saveimage = false;
+			      this.imageberitashow = false;
+			      validator.mark( $('#imageberita'), 'Gambar Maksimal 2MB');
+			    }
+		    },
+		    onsubmit: function(evue) {
+		      elem = this;
+		      csrf = '{!! csrf_token() !!}';
+		      if (validator.checkAll($('#formdata'))) {
+		      if (this.cansave) {
+			elem.cansave = false;
+				var form = document.querySelector('#imageberita');
+			var file = form.files[0];
+				var oData = new FormData();
+			if (this.saveimage) {
+			  oData.append('image', file);
 			}
+			oData.append('_token', csrf);
+			oData.append('judul', this.judul);
+			oData.append('beritaid', this.beritaid);
+			oData.append('hapusimage', this.hapusimage);
+			oData.append('deskripsi', $('#editor').html());
+			oData.append('kategori', this.kategori);
+			elem.simpanbuttonshow = false;
+			elem.loadingshow = true;
+			elem.$http.post('{{ URL::to('addberita') }}',oData).then(function(response){
+				jsonresponse = JSON.parse(response.body);
+					if (jsonresponse.msg == 'ErrorException') {
+						window.location.assign('{{ URL::to('berita-saya') }}');
+					} else {
+						location = 'berita-saya';
+					}
+					elem.simpanbuttonshow = true;
+			elem.loadingshow = false;
+			elem.cansave=true;
+			});
+			}
+		      }
+		    },
+		    hapusgambar: function() {
+		      this.saveimage = false;
+		      this.imageberitashow = false;
+		      this.hapusimage = '1';
+		      this.viewhhapusbutton = false;
+		    }
+	    }
         });
+@if (!is_null($beritaedit))
+  vue.judul = '{{ $beritaedit->judul }}';
+  vue.beritaid = '{{ $beritaedit->id }}';
+  vue.kategori = '{{ $beritaedit->kategori }}';      
+  @if (!is_null($beritaedit->filename))
+    vue.imageberitashow = true;
+    $('#imagepict').attr('src', '/public/image/{{ $beritaedit->filename }}');
+    vue.viewhhapusbutton = true;
+  @endif
+@endif
     </script>
 @endsection

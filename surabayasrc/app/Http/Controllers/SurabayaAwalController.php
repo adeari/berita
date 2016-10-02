@@ -7,6 +7,7 @@ use URL;
 use Auth;
 use App\User;
 use App\tables\TbLokasi;
+use App\tables\TbKomentar;
 
 class SurabayaAwalController extends MasterController
 {
@@ -114,5 +115,12 @@ class SurabayaAwalController extends MasterController
   public function map(){
     $tblokasi = TbLokasi::join('users', 'users.id', '=', 'tblokasi.userid')->get();
     return view('map', ['datamaps' => $tblokasi]);
+  }
+  public function komentarlist($idberita, Request $request) {
+    $canaccess = 0;
+    if (Auth::check()) {
+      $canaccess = 1;
+    }
+    return $this->getkomentardata($canaccess, $idberita);
   }
 }
