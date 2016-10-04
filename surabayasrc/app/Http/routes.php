@@ -21,6 +21,7 @@ Route::get('berita-add', 'SurabayaUserLoginController@beritaadd');
 Route::post('uploadfile', 'SurabayaUserLoginController@uploadfile');
 Route::post('addberita', 'SurabayaUserLoginController@addberita');
 Route::post('addkomentar', 'SurabayaUserLoginController@addkomentar');
+Route::post('komentar-hapus', 'SurabayaUserLoginController@komentarhapus');
 
 Route::get('saya', 'SurabayaUserLoginController@saya');
 Route::post('changepassword', 'SurabayaUserLoginController@changepassword');

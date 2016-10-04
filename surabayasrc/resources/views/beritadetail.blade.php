@@ -34,7 +34,15 @@
 <div id="komentarlistlayout" v-show="viewkomentars" style="display:none;">
 
   <div class="row" v-for="komentar in komentars"><div class="col-md-12 col-sm-12 col-xs-12"><div class="x_panel">
-  
+
+<div style="margin:0 0 10px 0;" v-if="komentar.isaccess == 1">
+  <button class="btn btn-warning" href="">RALAT</button>
+  <button class="btn btn-danger" style="float:right;" v-show="komentar.showhapusbutton" @click="askhapuskomentar(komentar)">HAPUS</button>
+  <div style="float:right" v-show="komentar.showlayoutconfirmhapus">
+  Jadi dihapus ? <button class="btn btn-danger" @click="dohapuskomentar(komentar)">Ya</button> <button class="btn btn-success" @click="batalhapuskomentar(komentar)">Tidak</button>
+  </div>
+</div>
+
     <div class="row" v-if="komentar.usersgambar.length > 0">
       <div class="col-md-1">
 	<img src="@{{ komentar.usersgambar }}" class="img-circle profile_img" style="margin:0 10px 0 0;padding:0;max-width:40px;max-height:40px;">
@@ -128,6 +136,7 @@
 @endsection
 @section('javascript')
 <script>
+candelete = true;
 var komentarlistlayout = new Vue({
   el: '#komentarlistlayout',
   data: {
@@ -150,7 +159,30 @@ var komentarlistlayout = new Vue({
 	  elem.viewkomentars = true;
 	}
       });
+    },
+    batalhapuskomentar : function(komentar) {
+      komentar.showhapusbutton = true;
+      komentar.showlayoutconfirmhapus = false;
+    },
+    askhapuskomentar : function(komentar) {
+      komentar.showhapusbutton = false;
+      komentar.showlayoutconfirmhapus = true;
+    },
+    dohapuskomentar: function(komentar) {
+    if (candelete) {
+      candelete = false;
+      elem = this;
+      elem.$http.post('{{ URL::to('komentar-hapus') }}', {_token: '{!! csrf_token() !!}', idkomentar:komentar.id }).then(function(response){
+	$.each(elem.komentars, function(i){
+	    if(elem.komentars[i] == komentar) {
+		elem.komentars.splice(i,1);
+		candelete = true;
+		return false;
+	    }
+	});
+      });
     }
+  },
   }
 });
 komentarlistlayout.getkomentarlist();

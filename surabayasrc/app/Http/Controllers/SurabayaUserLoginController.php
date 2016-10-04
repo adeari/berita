@@ -220,4 +220,7 @@ class SurabayaUserLoginController extends MasterController
     }
     return $return;
   }
+  public function komentarhapus(Request $request) {
+    return $this->komentar1deleted($request->idkomentar);
+  }
 }

@@ -148,6 +148,8 @@ class MasterController extends BaseController
       ,'idberita' => $komentar->idberita
       ,'name' => $komentar->name
       ,'usersgambar' => $usersgambar
+      ,'showhapusbutton' => true
+      ,'showlayoutconfirmhapus' => false
       , 'isaccess' => $isaccess];
     }
     return $komentars;
