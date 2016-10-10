@@ -150,6 +150,13 @@ class MasterController extends BaseController
       ,'usersgambar' => $usersgambar
       ,'showhapusbutton' => true
       ,'showlayoutconfirmhapus' => false
+      ,'viewkomentar' => true
+      ,'vieweditkomentar' => false
+      ,'imageberitashow' => false
+      ,'saveimagekomentar' => false
+      ,'vdelimagebutton' => false
+      ,'dohapusgambar' => '0'
+      ,'komentaredit' => ''
       , 'isaccess' => $isaccess];
     }
     return $komentars;

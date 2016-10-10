@@ -35,13 +35,14 @@
 
   <div class="row" v-for="komentar in komentars"><div class="col-md-12 col-sm-12 col-xs-12"><div class="x_panel">
 
-<div style="margin:0 0 10px 0;" v-if="komentar.isaccess == 1">
-  <button class="btn btn-warning" href="">RALAT</button>
-  <button class="btn btn-danger" style="float:right;" v-show="komentar.showhapusbutton" @click="askhapuskomentar(komentar)">HAPUS</button>
-  <div style="float:right" v-show="komentar.showlayoutconfirmhapus">
-  Jadi dihapus ? <button class="btn btn-danger" @click="dohapuskomentar(komentar)">Ya</button> <button class="btn btn-success" @click="batalhapuskomentar(komentar)">Tidak</button>
+<div v-show="komentar.viewkomentar">
+  <div style="margin:0 0 10px 0;" v-if="komentar.isaccess == 1">
+    <button class="btn btn-warning" @click="ralatkomentar(komentar)">RALAT</button>
+    <button class="btn btn-danger" style="float:right;" v-show="komentar.showhapusbutton" @click="askhapuskomentar(komentar)">HAPUS</button>
+    <div style="float:right" v-show="komentar.showlayoutconfirmhapus">
+    Jadi dihapus ? <button class="btn btn-danger" @click="dohapuskomentar(komentar)">Ya</button> <button class="btn btn-success" @click="batalhapuskomentar(komentar)">Tidak</button>
+    </div>
   </div>
-</div>
 
     <div class="row" v-if="komentar.usersgambar.length > 0">
       <div class="col-md-1">
@@ -54,13 +55,37 @@
     </div>
     <hr>
     <div class="row">
-      <div class="col-md-12 text-center">
-	<img src="@{{ komentar.gambar }}" >
-      </div>
+      <div class="col-md-12 text-center" v-show="komentar.gambar.length > 0"><img src="@{{ komentar.gambar }}" ></div>
       <div class="col-md-12">@{{ komentar.komentar }}</div>
     </div>
-  </div></div></div>
-
+  </div>
+  <div v-show="komentar.vieweditkomentar">
+  <h3>Ralat komentar</h3><hr>
+    {!! Form::open(['class' => 'form-horizontal form-label-left', 'novalidate' => 'novalidate', '@submit.prevent' => 'ralatkomentarprocess(komentar)', 'id' => 'formdata'])  !!}
+     <div class="item form-group">
+      {!! Form::label('komentargambar', 'Gambar', ['class' => 'control-label col-md-3 col-sm-3 col-xs-12']) !!}
+      <div class="col-md-6 col-sm-6 col-xs-12">
+	<input name="komentargambar@{{ komentar.id }}" type="file" id="komentargambar@{{ komentar.id }}" @change="onchangeimagekomentar(komentar, $event)" style="width:300px;">
+	<div v-show="komentar.imageberitashow"><br><img src="@{{ komentar.gambar }}" id="imagepictedit@{{ komentar.id }}" width="260px" height="200px" class="pointer"></div>
+	{{ Form::button('Hapus Gambar', array('class' => 'btn btn-primary', '@click' => 'hapusgambar(komentar)', 'v-show' => 'komentar.vdelimagebutton')) }}
+      </div>
+    </div>
+    <div class="item form-group">
+      {!! Form::label('komentar', 'Komentar', ['class' => 'control-label col-md-3 col-sm-3 col-xs-12']) !!}
+      <div class="col-md-6 col-sm-6 col-xs-12">
+      {!! Form::text('komentar', '', ['class' => 'form-control col-md-7 col-xs-12', 'id' => 'komentar', 'required' => 'required', 'v-model' => 'komentar.komentaredit']) !!}
+      </div>
+    </div>
+     <div class="form-group">
+	<div class="col-md-6 col-md-offset-3">
+	  <button id="send" type="submit" class="btn btn-success">Simpan</button>
+	  {{ Form::button('Batal', array('class' => 'btn btn-warning', '@click' => 'batalralat(komentar)', 'type' => 'button')) }}
+	</div>
+      </div>
+    {!! Form::close() !!}
+  </div>
+  </div></div>
+</div>
 </div>
     
 <div id="komentarlayout">
@@ -146,9 +171,9 @@ var komentarlistlayout = new Vue({
   methods:{
     getkomentarlist: function() {
       elem = this;
-      elem.komentars.splice(0, elem.komentars.length);
       elem.viewkomentars = false;
       elem.$http.get('{{ URL::to('komentarlist-'.$berita->id) }}').then(function(response){
+	elem.komentars.splice(0, elem.komentars.length);
 	if (response != null && response.body.length > 0) {
 	  var jsonObj = $.parseJSON(response.body);
 	  jsonObj.map( function(item) {
@@ -167,6 +192,69 @@ var komentarlistlayout = new Vue({
     askhapuskomentar : function(komentar) {
       komentar.showhapusbutton = false;
       komentar.showlayoutconfirmhapus = true;
+    },
+    ralatkomentar: function(komentar) {
+      komentar.viewkomentar = false;
+      komentar.vieweditkomentar = true;
+      komentarvuew.viewkomentaraddbutton = false;
+      komentar.komentaredit = komentar.komentar;
+      if (komentar.gambar.length > 0) {
+	komentar.imageberitashow = true;
+	komentar.vdelimagebutton = true;
+      }
+    },
+    onchangeimagekomentar: function(komentar, evue) {
+      thefile = evue.target.files[0];
+      if (thefile.size < 2000000) {
+	var readImg = new FileReader();
+	readImg.readAsDataURL(evue.target.files[0]);
+	readImg.onload = function(e) {
+		$('#imagepictedit'+komentar.id).attr('src',e.target.result);
+	}
+	komentar.imageberitashow = true;
+	komentar.vdelimagebutton = true;
+	validator.unmark( $('#imagepictedit'+komentar.id));
+	komentar.saveimagekomentar = true;
+      } else {
+	komentar.imageberitashow = false;
+	komentar.saveimagekomentar = false;
+	validator.mark($('#imagepictedit'+komentar.id), 'Gambar Maksimal 2MB');
+      }
+    },
+    hapusgambar: function(komentar) {
+      komentar.imageberitashow = false;
+      komentar.vdelimagebutton = false;
+      $('#komentargambar'+komentar.id).val('');
+      komentar.dohapusgambar = '1';
+    },
+    batalralat: function(komentar) {
+      komentar.viewkomentar = true;
+      komentar.vieweditkomentar = false;
+      komentarvuew.viewkomentaraddbutton = true;
+    },
+    ralatkomentarprocess: function(komentar) {
+      if (canaddkomen) {
+	canaddkomen = false;
+	elem = this;
+	elem.loadingshow = true;
+	var oData = new FormData();
+	oData.append('_token', '{!! csrf_token() !!}');
+	oData.append('idkomentar', komentar.id);
+	oData.append('komentar', komentar.komentaredit);
+	if (komentar.dohapusgambar == '1') {
+	  oData.append('hapusgambar', '1');
+	}
+	var form = document.querySelector('#komentargambar'+komentar.id);
+	if (komentar.saveimagekomentar) {
+	  oData.append('gambar', form.files[0]);
+	}
+	elem.$http.post('{{ URL::to('addkomentar') }}',oData).then(function(response){
+	  $('#komentargambar'+komentar.id).val('');
+	  canaddkomen = true;
+	  komentarlistlayout.getkomentarlist();
+	  komentarvuew.viewkomentaraddbutton = true;
+	});
+      }
     },
     dohapuskomentar: function(komentar) {
     if (candelete) {
@@ -236,8 +324,8 @@ var komentarvuew = new Vue({
 	elem.$http.post('{{ URL::to('addkomentar') }}',oData).then(function(response){
 	  $('#imageberita').val('');
 	  elem.komentar = '';
-	  this.komentaraddlayout = false;
-	  this.viewkomentaraddbutton = true;
+	  elem.komentaraddlayout = false;
+	  elem.viewkomentaraddbutton = true;
 	  elem.loadingshow = false;
 	  canaddkomen = true;
 	  komentarlistlayout.getkomentarlist();

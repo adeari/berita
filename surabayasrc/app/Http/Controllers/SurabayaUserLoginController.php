@@ -208,15 +208,35 @@ class SurabayaUserLoginController extends MasterController
   
   public function addkomentar(Request $request) {
     $return = $this->uploadfile();
+    $hapusfile = '';
+    $folderupload = public_path().'/image/';
     if ($return['success'] == '1') {
-      $tbkomentar = new TbKomentar();
-      $tbkomentar->idberita = $request->idberita;
+      if (!isset($request->idkomentar)) {
+	$tbkomentar = new TbKomentar();
+	$tbkomentar->idberita = $request->idberita;
+      } else {
+	$tbkomentar = TbKomentar::find($request->idkomentar);
+	if (!is_null($tbkomentar->gambar) && !empty($tbkomentar->gambar) && (isset($request->hapusgambar)) || !is_null($return['filename'])) {
+	  $hapusfile = $tbkomentar->gambar;
+	}
+      }
       $tbkomentar->useridinput = Auth::user()->id;
       $tbkomentar->komentar = $request->komentar;
-      if (!is_null($return['filename'])) {
+      if (!is_null($return['filename']) && !isset($request->hapusgambar)) {
 	$tbkomentar->gambar = $return['filename'];
+      } else if (isset($request->hapusgambar)) {
+	$tbkomentar->gambar = null;
       }
-      $tbkomentar->save();
+      
+      if (!isset($request->idkomentar)) {
+	$tbkomentar->save();
+      } else {
+	$tbkomentar->update();
+      }
+      
+      if (!empty($hapusfile) && file_exists($folderupload.$hapusfile)) {
+	unlink($folderupload.$hapusfile);
+      }
     }
     return $return;
   }
