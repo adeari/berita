@@ -70,5 +70,22 @@
   }
 }
 .usernamekomentar {
- font-weight:bold;font-style=italic;font-size:13px;color:blue; 
+ font-weight:bold;font-style=italic;font-size:13px;color:blue;
+}
+
+.leftmenu {
+ float:left;
+ margin:2px 10px 0 -10px;
+}
+.paginationmee {
+  float:right;
+  margin:-10px 0 0 0;
+}
+.blur {
+  -webkit-filter: blur(1px);
+  -moz-filter: blur(1px);
+  -o-filter: blur(1px);
+  -ms-filter: blur(1px);
+  filter: blur(1px);
+  background-color: #ccc;
 }

@@ -16,7 +16,7 @@
       <div class="col-md-12 col-sm-12 col-xs-12">
 	<div class="x_panel">
 	  <div class="x_content">
-	      <a href="{{ URL::to('apk/apps.apk') }}">Download Android</a>
+	      <a href="{{ URL::to('public/apk/apps.apk') }}">Download Android</a>
 	  </div>
 	</div>
       </div>

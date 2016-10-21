@@ -103,6 +103,8 @@ class MasterController extends BaseController
       unlink('public/image/'.$berita->filename);
     }
     $berita->delete();
+    DB::statement("UPDATE users SET jumlah_komentar = (select count(*) from tbkomentar where tbkomentar.useridinput = ".Auth::user()->id.") where id=".Auth::user()->id);
+    DB::statement("UPDATE users SET jumlah_berita = (select count(*) from tbberita where tbberita.useridinput = ".Auth::user()->id.") where id=".Auth::user()->id);
   }
   
   public function komentar1deleted($komentarid) {
@@ -110,7 +112,10 @@ class MasterController extends BaseController
       if (!is_null($komentar->gambar) && !empty($komentar->gambar) && file_exists('public/image/'.$komentar->gambar)) {
 	unlink('public/image/'.$komentar->gambar);
       }
+      $idberita = $komentar->idberita;
       $komentar->delete();
+      DB::statement("UPDATE tbberita SET jumlah_komentar = (select count(*) from tbkomentar where tbkomentar.idberita = ".$komentar->idberita.") where id = ".$idberita);
+      DB::statement("UPDATE users SET jumlah_komentar = (select count(*) from tbkomentar where tbkomentar.useridinput = ".Auth::user()->id.") where id=".Auth::user()->id);
       return '1';
   }
   public function getkomentardata($canaccess, $idberita) {

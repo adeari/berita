@@ -145,6 +145,7 @@ class SurabayaUserLoginController extends MasterController
 			}
 			if (empty($request->beritaid)) {
 			  $tbberita->save();
+			  DB::statement("UPDATE users SET jumlah_berita = (select count(*) from tbberita where tbberita.useridinput = ".Auth::user()->id.") where id=".Auth::user()->id);
 			} else {
 			  $tbberita->update();
 			}
@@ -230,6 +231,8 @@ class SurabayaUserLoginController extends MasterController
       
       if (!isset($request->idkomentar)) {
 	$tbkomentar->save();
+	DB::statement("UPDATE tbberita SET jumlah_komentar = (select count(*) from tbkomentar where tbkomentar.idberita = ".$request->idberita.") where id = ".$request->idberita);
+	DB::statement("UPDATE users SET jumlah_komentar = (select count(*) from tbkomentar where tbkomentar.useridinput = ".Auth::user()->id.") where id=".Auth::user()->id);
       } else {
 	$tbkomentar->update();
       }

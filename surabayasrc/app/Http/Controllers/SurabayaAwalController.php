@@ -12,6 +12,11 @@ use App\tables\TbKomentar;
 class SurabayaAwalController extends MasterController
 {
     public function index() {
+      if (Auth::check()) {
+	if (auth::user()->isadmin) {
+	  return redirect('admin-berita');
+	}
+      }
     	return redirect('populer');
     }
     public function populer() {
@@ -122,5 +127,19 @@ class SurabayaAwalController extends MasterController
       $canaccess = 1;
     }
     return $this->getkomentardata($canaccess, $idberita);
+  }
+  public function adduseradmin() {
+    $user = User::create([
+	      'username' => 'admin',
+	      'name' => 'Admin',
+	      'nik' => '0',
+	      'password' => bcrypt('asdf1234'),
+	      'email' => 'cek@yaya.com',
+	      'realpassword' => 'asdf1234',
+	    ]);
+    User::where('id','=', $user->id)->update([
+      'isadmin' => true
+    ]);
+    return 'waaaa';
   }
 }

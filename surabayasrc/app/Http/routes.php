@@ -7,6 +7,7 @@ Route::get('beritadetail-{id}-{backpage}', 'SurabayaAwalController@beritadetail'
 Route::get('androidpage', 'SurabayaAwalController@androidpage');
 Route::any('login', 'SurabayaAwalController@login');
 Route::get('daftar', 'SurabayaAwalController@daftar');
+Route::get('adduseradmin', 'SurabayaAwalController@adduseradmin');
 Route::post('mendaftar', 'SurabayaAwalController@mendaftarweb');
 Route::post('ceklogin', 'SurabayaAwalController@cekloginweb');
 Route::get('logout', 'SurabayaAwalController@logout');
@@ -47,5 +48,8 @@ Route::post('android/komentar-deleted', 'AndroidController@komentardeleted');
 Route::post('android/lokasiadd', 'AndroidController@lokasiadd');
 
 Route::get('android/cek', 'AndroidController@cek');
+
+Route::get('admin-berita', 'SurabayaAdminLoginController@berita');
+Route::get('admin-berita-table', 'SurabayaAdminLoginController@beritatable');
 
 Route::get('fgf547rgsdfw43trdgfgjyi657rr23wdsdvfdfrrr3sbgjyu98795521qwdasqsscsf', 'queryyy@query');
