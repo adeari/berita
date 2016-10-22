@@ -18,6 +18,7 @@ DB::statement("ALTER TABLE `users` ADD `jumlah_berita` INT NOT NULL DEFAULT '0' 
 DB::statement("UPDATE tbberita SET jumlah_komentar = (select count(*) from tbkomentar where tbkomentar.idberita = tbberita.id)");
 DB::statement("UPDATE users SET jumlah_komentar = (select count(*) from tbkomentar where tbkomentar.useridinput = users.id)");
 DB::statement("UPDATE users SET jumlah_berita = (select count(*) from tbberita where tbberita.useridinput = users.id)");
+DB::statement("ALTER TABLE `tbberita` ADD `populer` BOOLEAN NOT NULL DEFAULT FALSE AFTER `jumlah_share`;");
 	}
 	public function fromfile(){
 		DB::statement(File::get('nin.txt'));

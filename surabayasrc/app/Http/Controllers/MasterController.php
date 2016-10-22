@@ -92,30 +92,39 @@ class MasterController extends BaseController
       ,'email' => $request->email
     ]);
   }
-  public function deleteberita($request) {
-    $berita = TbBerita::find($request->id);
+  
+  public function deleteberitabyid($id, $needqueryupdate = true) {
+	$berita = TbBerita::find($id);
     $komentars = TbKomentar::select('id')->where('idberita', '=', $berita->id)->whereNotNull('gambar')->get();
     foreach ($komentars as  $komentar) {
-      $this->komentar1deleted($komentar->id);
+      $this->komentar1deleted($komentar->id, false);
     }
     TbKomentar::where('idberita', '=', $berita->id)->delete();
     if (!is_null($berita->filename) && !empty($berita->filename) && file_exists('public/image/'.$berita->filename)) {
       unlink('public/image/'.$berita->filename);
     }
     $berita->delete();
-    DB::statement("UPDATE users SET jumlah_komentar = (select count(*) from tbkomentar where tbkomentar.useridinput = ".Auth::user()->id.") where id=".Auth::user()->id);
-    DB::statement("UPDATE users SET jumlah_berita = (select count(*) from tbberita where tbberita.useridinput = ".Auth::user()->id.") where id=".Auth::user()->id);
+	if ($needqueryupdate) {
+		DB::statement("UPDATE users SET jumlah_komentar = (select count(*) from tbkomentar where tbkomentar.useridinput = users.id)");
+		DB::statement("UPDATE users SET jumlah_berita = (select count(*) from tbberita where tbberita.useridinput = ".Auth::user()->id.") where id=".Auth::user()->id);
+	}
   }
   
-  public function komentar1deleted($komentarid) {
+  public function deleteberita($request) {
+    $this->deleteberitabyid($request->id);
+  }
+  
+  public function komentar1deleted($komentarid, $needupdated = true) {
       $komentar = TbKomentar::find($komentarid);
       if (!is_null($komentar->gambar) && !empty($komentar->gambar) && file_exists('public/image/'.$komentar->gambar)) {
 	unlink('public/image/'.$komentar->gambar);
       }
       $idberita = $komentar->idberita;
       $komentar->delete();
-      DB::statement("UPDATE tbberita SET jumlah_komentar = (select count(*) from tbkomentar where tbkomentar.idberita = ".$komentar->idberita.") where id = ".$idberita);
-      DB::statement("UPDATE users SET jumlah_komentar = (select count(*) from tbkomentar where tbkomentar.useridinput = ".Auth::user()->id.") where id=".Auth::user()->id);
+	  if ($needupdated) {
+		DB::statement("UPDATE tbberita SET jumlah_komentar = (select count(*) from tbkomentar where tbkomentar.idberita = ".$komentar->idberita.") where id = ".$idberita);
+		DB::statement("UPDATE users SET jumlah_komentar = (select count(*) from tbkomentar where tbkomentar.useridinput = ".Auth::user()->id.") where id=".Auth::user()->id);
+	  }
       return '1';
   }
   public function getkomentardata($canaccess, $idberita) {
@@ -165,5 +174,24 @@ class MasterController extends BaseController
       , 'isaccess' => $isaccess];
     }
     return $komentars;
+  }
+  
+  public function parameterdetail($id, $backpage, $request) {
+	$berita = TbBerita::find($id);
+		$berita['user1'] = User::find($berita->useridinput);
+		
+		$parameter = '';
+		foreach ($request->query as $key => $val) {
+			if (empty($parameter)) {
+				$parameter = $key.'='.$val;
+			} else {
+				$parameter .= '&'.$key.'='.$val;
+			}
+		}
+		
+		return ['berita' => $berita
+				, 'backpage' => $backpage
+				, 'parameter' => $parameter
+		];
   }
 }

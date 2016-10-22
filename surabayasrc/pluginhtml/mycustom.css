@@ -89,3 +89,18 @@
   filter: blur(1px);
   background-color: #ccc;
 }
+.pembuatberitarow {
+  margin-top: 5px;
+  border-top: 1px ridge;
+  padding-top: 5px;
+}
+.pointer {
+  cursor: pointer;
+}
+.rightadminmenu {
+  height:50px;padding:0;
+}
+.textbig {
+  font-weight: bold;
+  font-size: 15px;
+}

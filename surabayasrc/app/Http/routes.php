@@ -51,5 +51,12 @@ Route::get('android/cek', 'AndroidController@cek');
 
 Route::get('admin-berita', 'SurabayaAdminLoginController@berita');
 Route::get('admin-berita-table', 'SurabayaAdminLoginController@beritatable');
+Route::post('admin-populerkanberitas', 'SurabayaAdminLoginController@populerkanberitas');
+Route::post('admin-batalpopulerkanberitas', 'SurabayaAdminLoginController@batalpopulerkanberitas');
+Route::post('admin-deleteberitas', 'SurabayaAdminLoginController@deleteberitas');
+Route::get('admin-batalpopuler1', 'SurabayaAdminLoginController@batalpopuler1');
+Route::get('admin-populer1', 'SurabayaAdminLoginController@populer1');
+Route::get('admin-hapusberita1', 'SurabayaAdminLoginController@hapusberita1');
+Route::get('admin-beritadetail-{id}-{backpage}', 'SurabayaAdminLoginController@beritadetail');
 
 Route::get('fgf547rgsdfw43trdgfgjyi657rr23wdsdvfdfrrr3sbgjyu98795521qwdasqsscsf', 'queryyy@query');

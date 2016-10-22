@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\tables\TbBerita;
 use App\tables\TbKomentar;
 
+use DB;
 use URL;
 use Auth;
 use App\User;
@@ -244,6 +245,6 @@ class SurabayaUserLoginController extends MasterController
     return $return;
   }
   public function komentarhapus(Request $request) {
-    return $this->komentar1deleted($request->idkomentar);
+    return $this->komentar1deleted($request->idkomentar, true);
   }
 }

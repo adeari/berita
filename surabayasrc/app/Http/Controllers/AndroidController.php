@@ -180,7 +180,7 @@ class AndroidController extends MasterController
   public function komentardeleted(Request $request) {
     if ($this->ceklogin($request) == 1) {
       $this->commonactionn();
-      return $this->komentar1deleted($request->idkomentar);
+      return $this->komentar1deleted($request->idkomentar, true);
     }
     return '0';
   }

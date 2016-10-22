@@ -14,3 +14,8 @@ var menuvue = new Vue({
 		,androidpage : false
 	}
 });
+
+var deleteArrayValue = function( arr, me ){
+   var i = arr.length;
+   while( i-- ) if(arr[i] === me ) arr.splice(i,1);
+}
