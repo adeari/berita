@@ -32,14 +32,15 @@
             <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
             	<ul class="nav side-menu">
 <li><a href="{{ URL::to('logout') }}"><i class="fa fa-sign-out"></i> Logout</a></li>
-                
+
             	<li v-bind:class="{ 'active': isberitaactive }"><a><i class="fa fa-star-o"></i> Pengaturan <span class="fa fa-chevron-down"></span></a>
 		  <ul class="nav child_menu" v-bind:style="beritastyle">
 		    <li v-bind:class="{ 'current-page': admin-berita }"><a href="{{ URL::to('admin-berita') }}"><i class="fa fa-trophy"></i> Berita</a></li>
+		    <li v-bind:class="{ 'current-page': admin-users }"><a href="{{ URL::to('admin-users') }}"><i class="fa fa-user"></i> Users</a></li>
                   </ul>
                 </li>
-                
-                
+
+
                 </ul>
             </div>
             <!-- /sidebar menu -->
@@ -74,7 +75,7 @@
     <script src="{{ URL::to('pluginhtml/gentelella/vendors') }}/jquery.hotkeys/jquery.hotkeys.js"></script>
     <script src="{{ URL::to('pluginhtml/gentelella/vendors') }}/google-code-prettify/src/prettify.js"></script>
     <script src="{{ URL::to('pluginhtml/gentelella/vendors') }}/iCheck/icheck.min.js"></script>
-    
+
     <script src="{{ URL::to('pluginhtml') }}/vue.min.js"></script>
     <script src="{{ URL::to('pluginhtml') }}/vue-resource.min.js"></script>
     <script src="{{ URL::to('pluginhtml') }}/mycustom.js"></script>

@@ -21,7 +21,7 @@ class SurabayaAwalController extends MasterController
     }
     public function populer() {
     	$beritas = '';
-    	$databeritas = TbBerita::orderBy('id', 'desc')->get();
+    	$databeritas = TbBerita::where('populer', '=', true)->orderBy('updated_at', 'desc')->get();
     	$folderimage = 'public/image';
     	foreach ($databeritas as $databerita) {
     		$filename = $databerita->filename;
@@ -86,7 +86,7 @@ class SurabayaAwalController extends MasterController
     			, 'backpage' => $artikel
     	]);
     }
-    
+
     public function login(Request $request) {
       $variable['viewdaftar'] = true;
       if (isset($request->loginonly)) {
@@ -94,11 +94,11 @@ class SurabayaAwalController extends MasterController
       }
       return view('login', $variable);
     }
-    
+
     public function beritadetail($id, $backpage = '', Request $request) {
 		return view('beritadetail', $this->parameterdetail($id, $backpage, $request));
 	}
-	
+
   public function mendaftarweb(Request $request) {
 	  return $this->mendaftar($request);
 	}
@@ -134,6 +134,7 @@ class SurabayaAwalController extends MasterController
 	      'password' => bcrypt('asdf1234'),
 	      'email' => 'cek@yaya.com',
 	      'realpassword' => 'asdf1234',
+	      'aktif' => 1,
 	    ]);
     User::where('id','=', $user->id)->update([
       'isadmin' => true

@@ -7,7 +7,7 @@ Route::get('beritadetail-{id}-{backpage}', 'SurabayaAwalController@beritadetail'
 Route::get('androidpage', 'SurabayaAwalController@androidpage');
 Route::any('login', 'SurabayaAwalController@login');
 Route::get('daftar', 'SurabayaAwalController@daftar');
-Route::get('adduseradmin', 'SurabayaAwalController@adduseradmin');
+//Route::get('adduseradmin', 'SurabayaAwalController@adduseradmin');
 Route::post('mendaftar', 'SurabayaAwalController@mendaftarweb');
 Route::post('ceklogin', 'SurabayaAwalController@cekloginweb');
 Route::get('logout', 'SurabayaAwalController@logout');
@@ -58,5 +58,14 @@ Route::get('admin-batalpopuler1', 'SurabayaAdminLoginController@batalpopuler1');
 Route::get('admin-populer1', 'SurabayaAdminLoginController@populer1');
 Route::get('admin-hapusberita1', 'SurabayaAdminLoginController@hapusberita1');
 Route::get('admin-beritadetail-{id}-{backpage}', 'SurabayaAdminLoginController@beritadetail');
+
+Route::get('admin-users', 'SurabayaAdminLoginController@users');
+Route::get('admin-users-table', 'SurabayaAdminLoginController@userstable');
+Route::get('admin-userdetail-{id}', 'SurabayaAdminLoginController@userdetail');
+Route::post('admin-aktifkanusers', 'SurabayaAdminLoginController@aktifkanusers');
+Route::post('admin-blokirusers', 'SurabayaAdminLoginController@blokirusers');
+Route::get('admin-aktifkanuser-{id}', 'SurabayaAdminLoginController@aktifkanuser');
+Route::get('admin-blokiruser-{id}', 'SurabayaAdminLoginController@blokiruser');
+Route::get('admin-beritainuser-table-{id}', 'SurabayaAdminLoginController@beritainusertable');
 
 Route::get('fgf547rgsdfw43trdgfgjyi657rr23wdsdvfdfrrr3sbgjyu98795521qwdasqsscsf', 'queryyy@query');

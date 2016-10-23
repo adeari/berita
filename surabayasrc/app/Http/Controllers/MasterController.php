@@ -13,6 +13,7 @@ use App\tables\TbBerita;
 
 class MasterController extends BaseController
 {
+	var $datasearch;
 	public function generateRandomString($length = 10) {
 		$characters = '0123456789abcdefghijklmnopqrstuvwxyz';
 		$charactersLength = strlen($characters);
@@ -28,7 +29,7 @@ class MasterController extends BaseController
 		}
 		return $str;
 	}
-	
+
 	public function removeUnusedCharacter($str) {
 		if (strlen($str) > 0) {
 			$str = str_replace(PHP_EOL, '', $str);
@@ -40,7 +41,7 @@ class MasterController extends BaseController
 	}
   public function mendaftar(Request $request) {
 	  $return = ['success' => 1, 'msg' => '', 'idelement' => ''];
-	  
+
 	  if (User::where('username', '=', $request->usernamenik)->count()  > 0) {
 	    $return['success'] = 0;
 	    $return['idelement'] = 'usernamenik';
@@ -61,6 +62,7 @@ class MasterController extends BaseController
 	      'password' => bcrypt($request->password),
 	      'email' => $request->email,
 	      'realpassword' => $request->password,
+	      'aktif' => true,
 	    ]);
 	  }
 	  return $return;
@@ -92,7 +94,7 @@ class MasterController extends BaseController
       ,'email' => $request->email
     ]);
   }
-  
+
   public function deleteberitabyid($id, $needqueryupdate = true) {
 	$berita = TbBerita::find($id);
     $komentars = TbKomentar::select('id')->where('idberita', '=', $berita->id)->whereNotNull('gambar')->get();
@@ -109,11 +111,11 @@ class MasterController extends BaseController
 		DB::statement("UPDATE users SET jumlah_berita = (select count(*) from tbberita where tbberita.useridinput = ".Auth::user()->id.") where id=".Auth::user()->id);
 	}
   }
-  
+
   public function deleteberita($request) {
     $this->deleteberitabyid($request->id);
   }
-  
+
   public function komentar1deleted($komentarid, $needupdated = true) {
       $komentar = TbKomentar::find($komentarid);
       if (!is_null($komentar->gambar) && !empty($komentar->gambar) && file_exists('public/image/'.$komentar->gambar)) {
@@ -146,17 +148,17 @@ class MasterController extends BaseController
       } else {
 	$gambar = '';
       }
-      
+
       $isaccess = '0';
       if ($canaccess == '1' && $komentar->useridinput == Auth::user()->id) {
 	$isaccess = '1';
       }
-      
+
       $usersgambar = "";
       if (!is_null($komentar->usersgambar) && !empty($komentar->usersgambar)) {
 	$usersgambar = URL::to('public/image/'.$komentar->usersgambar);
       }
-      
+
       $komentars[] = ['komentar' => $komentar->komentar, 'gambar' => $gambar,
       'id' => $komentar->id, 'useridinput' => $komentar->useridinput
       ,'idberita' => $komentar->idberita
@@ -175,23 +177,19 @@ class MasterController extends BaseController
     }
     return $komentars;
   }
-  
+
   public function parameterdetail($id, $backpage, $request) {
 	$berita = TbBerita::find($id);
 		$berita['user1'] = User::find($berita->useridinput);
-		
-		$parameter = '';
-		foreach ($request->query as $key => $val) {
-			if (empty($parameter)) {
-				$parameter = $key.'='.$val;
-			} else {
-				$parameter .= '&'.$key.'='.$val;
-			}
-		}
-		
+
 		return ['berita' => $berita
 				, 'backpage' => $backpage
-				, 'parameter' => $parameter
 		];
   }
+  public function formatdatetimeshow($str) {
+		if (!is_null($str) && !empty($str)) {
+			return substr($str, 8, 2) .'/'.substr($str, 5, 2) .'/'. substr($str, 0, 4) .' '.substr($str, 11, 2).':'.substr($str, 14, 2);
+		}
+		return '';
+	}
 }

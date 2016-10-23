@@ -26,7 +26,7 @@
 	{!! Form::open(['class' => 'form-horizontal form-label-left', 'novalidate' => 'novalidate', '@submit.prevent' => 'changeprofile', 'id' => 'formdata'])  !!}
 	{!! Form::file('profileimage', ['class' => 'hide', 'id' => 'profileimage', '@change' => 'onchangeprofileimage']) !!}
   <div class="item form-group">
-    {!! Form::label('name', 'Name', ['class' => 'control-label col-md-3 col-sm-3 col-xs-12']) !!}
+    {!! Form::label('name', 'Nama', ['class' => 'control-label col-md-3 col-sm-3 col-xs-12']) !!}
     <div class="col-md-6 col-sm-6 col-xs-12">
       {!! Form::text('name', '@{{ name }}', ['class' => 'form-control col-md-7 col-xs-12', 'id' => 'name', 'required' => 'required', 'v-model' => 'name']) !!}
     </div>
@@ -132,7 +132,7 @@
   <svg class="loader loader-8">
     <circle cx="75" cy="75" r="60" fill="transparent" stroke="#AAEA33" stroke-width="6" stroke-linecap="round" stroke-dasharray="385" stroke-dashoffset="385" filter="url(#blur)"></circle>
   </svg>
-</div> 
+</div>
   <div class="form-group">
     <div class="col-md-6 col-md-offset-3">
       <button id="send" type="submit" class="btn btn-warning">Ganti Password</button>
@@ -143,7 +143,7 @@
     </div>
   </div>
 </div>
-            
+
           </div>
         </div>
         <!-- /page content -->

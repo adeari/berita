@@ -5,7 +5,7 @@
   <div class="">
     <div class="page-title">
       <div class="title_left">
-				<a href="{{ URL::to($backpage.(empty($parameter) ? '' : '?'.$parameter)) }}"><h3 class="blue"><i class="fa fa-arrow-left"></i> Kembali</h3></a>
+				<a href="{{ URL::to($backpage) }}"><h3 class="blue"><i class="fa fa-arrow-left"></i> Kembali</h3></a>
       </div>
 @if (Auth::check())
 @if (Auth::user()->isadmin)
@@ -19,11 +19,11 @@
 				</a>
 				<ul class="dropdown-menu dropdown-usermenu pull-right">
 @if ($berita->populer)
-	<li><a href="{{ URL::to('admin-batalpopuler1?beritaid='.$berita->id.'&backpage='.$backpage.'&'.$parameter) }}"><i class="fa fa-star-o leftmenu"></i>  Batal Populer</a></li>
+	<li><a href="{{ URL::to('admin-batalpopuler1?beritaid='.$berita->id.'&backpage='.$backpage) }}"><i class="fa fa-star-o leftmenu"></i>  Batal Populer</a></li>
 @else
-	<li><a href="{{ URL::to('admin-populer1?beritaid='.$berita->id.'&backpage='.$backpage.'&'.$parameter) }}"><i class="fa fa-star red leftmenu"></i> Populerkan</a></li>
+	<li><a href="{{ URL::to('admin-populer1?beritaid='.$berita->id.'&backpage='.$backpage) }}"><i class="fa fa-star red leftmenu"></i> Populerkan</a></li>
 @endif
-	<li><a href="" @click.stop.prevent="hapusnihberita('{{ URL::to('admin-hapusberita1?beritaid='.$berita->id.'&backpage='.$backpage.'&'.$parameter) }}')"><i class="fa fa-remove leftmenu"></i> Hapus</a></li>
+	<li><a href="" @click.stop.prevent="hapusnihberita('{{ URL::to('admin-hapusberita1?beritaid='.$berita->id.'&backpage='.$backpage) }}')"><i class="fa fa-remove leftmenu"></i> Hapus</a></li>
 				</ul>
 			</li>
 			</ul>
@@ -62,7 +62,7 @@
 	</div>
       </div>
     </div>
-    
+
 <div id="komentarlistlayout" v-show="viewkomentars" style="display:none;">
 
   <div class="row" v-for="komentar in komentars"><div class="col-md-12 col-sm-12 col-xs-12"><div class="x_panel">
@@ -119,7 +119,7 @@
   </div></div>
 </div>
 </div>
-    
+
 <div id="komentarlayout">
 
   <div class="row" v-show="komentaraddlayout" style="display:none;"><div class="col-md-12 col-sm-12 col-xs-12"><div class="x_panel"><div class="x_content">
@@ -137,7 +137,7 @@
       <div v-show="imageberitashow"><br><img src="" id="imagepict" width="260px" height="200px" class="pointer"></div>
     </div>
   </div>
-  
+
 <div class="demo" v-show="loadingshow">
   <svg class="loader">
     <filter id="blur">
@@ -166,8 +166,8 @@
   <svg class="loader loader-8">
     <circle cx="75" cy="75" r="60" fill="transparent" stroke="#AAEA33" stroke-width="6" stroke-linecap="round" stroke-dasharray="385" stroke-dashoffset="385" filter="url(#blur)"></circle>
   </svg>
-</div> 
-  
+</div>
+
   <div class="item form-group">
     <div class="col-md-6 col-md-offset-3">
       {!! Form::Submit('Komentar', ['class' => 'btn btn-primary']) !!}

@@ -6,7 +6,7 @@
           <div class="">
             <div class="page-title">
               <div class="title_left">
-                <h3><i class="fa fa-trophy"></i> Berita</h3>
+                <h3><i class="fa fa-user"></i> Users</h3>
               </div>
             </div>
             <div class="clearfix"></div>
@@ -14,28 +14,28 @@
 <div class="row"><div class="col-md-12 col-sm-12 col-xs-12">
 	<div class="x_panel">
     <div class="x_content">
-		{!! Form::open(['class' => 'form-horizontal form-label-left', '@submit.prevent' => "loadberita"])  !!}
+		{!! Form::open(['class' => 'form-horizontal form-label-left', '@submit.prevent' => "loadusers"])  !!}
 		<div class="item form-group">
 			{!! Form::label('filter', 'Filter', ['class' => 'control-label col-md-2 col-sm-2 col-xs-12']) !!}
 			<div class="col-md-6 col-sm-6 col-xs-12">
-				{!! Form::select('filter',['' =>'Tampilkan Semua Berita'
-				, 'Populer' =>'Tampilkan Populer saja'
-				, 'Umum' =>'Tampilkan Artikel Umum'
-				, 'Acara' =>'Tampilkan Artikel Acara'
-				, 'Pengaduan' =>'Tampilkan Artikel Pengaduan'
-				], $filter, ['class' => 'form-control col-md-6 col-xs-6 pointer', 'v-model' => 'filter', '@change' => 'loadberita']) !!}
+				{!! Form::select('filter',['User Aktif' =>'User Aktif'
+				, 'User Blokir' =>'User Blokir'
+				, 'Semua User' =>'Semua User'
+				], $filter, ['class' => 'form-control col-md-6 col-xs-6 pointer', 'v-model' => 'filter', '@change' => 'loadusers']) !!}
 			</div>
 		</div>
 		<div class="item form-group">
 			{!! Form::label('tampilkan', 'Tampilkan', ['class' => 'control-label col-md-2 col-sm-2 col-xs-12', ]) !!}
 			<div class="col-md-6 col-sm-6 col-xs-12">
-				{!! Form::select('tampilkan',['Berita Terbaru ke Berita Terlama' =>'Berita Terbaru ke Berita Terlama'
-				, 'Berita Terlama ke Berita Terbaru' =>'Berita Terlama ke Berita Terbaru'
-				, 'Komentar Terbanyak ke sedikit' =>'Komentar Terbanyak ke sedikit'
-				, 'Komentar Sedikit ke banyak' =>'Komentar Sedikit ke banyak'
-				, 'Terbanyak di share ke sedikit' =>'Terbanyak di share ke sedikit'
-				, 'Sedikit di share ke banyak' =>'Sedikit di share ke banyak'
-				], $tampilkan, ['class' => 'form-control col-md-6 col-xs-6 pointer', 'v-model' => 'tampilkan', '@change' => 'loadberita']) !!}
+				{!! Form::select('tampilkan',['Baru Login' =>'Baru Login'
+				, 'Terlama Login' =>'Terlama Login'
+				, 'Terbanyak Berita' =>'Terbanyak Berita'
+				, 'Tersedikit Berita' =>'Tersedikit Berita'
+				, 'Terbanyak Komentar' =>'Terbanyak Komentar'
+				, 'Tersedikit Komentar' =>'Tersedikit Komentar'
+				, 'Terbanyak Share' =>'Terbanyak Share'
+				, 'Tersedikit Share' =>'Tersedikit Share'
+				], $tampilkan, ['class' => 'form-control col-md-6 col-xs-6 pointer', 'v-model' => 'tampilkan', '@change' => 'loadusers']) !!}
 			</div>
 		</div>
 		<div class="item form-group">
@@ -56,35 +56,41 @@
 	      <th>
 		<input type="checkbox" id="check-all" class="flat">
 	      </th>
-	      <th class="column-title">Kategori</th>
-	      <th class="column-title">Judul Berita </th>
-	      <th class="column-title">Jumlah Komentar</th>
-	      <th class="column-title">Jumlah Share</th>
+	      <th class="column-title">Status</th>
+	      <th class="column-title">N I K</th>
+	      <th class="column-title">User Name</th>
+	      <th class="column-title">Email</th>
+	      <th class="column-title">Nama</th>
+	      <th class="column-title">Terakhir Login</th>
+	      <th class="column-title" style="text-align:right;">Jml. Berita</th>
+	      <th class="column-title" style="text-align:right;">Jml. Komentar</th>
+	      <th class="column-title" style="text-align:right;">Jml. Share</th>
 	      <th class="bulk-actions" colspan="7">
-      		<li role="presentation" class="dropdown" style="list-style-type: none;">
-            <a class="dropdown-toggle info-number antoo" href="" class="" data-toggle="dropdown" aria-expanded="false" style="color:#fff; font-weight:500;">Tindakan ( <span class="action-cnt"> </span> ) <i class="fa fa-chevron-down"></i></a>
-            <ul class="dropdown-menu dropdown-usermenu">
-              <li @click.stop.prevent="populerkan"><a href=""><i class="fa fa-star red leftmenu"></i> Populerkan</a></li>
-              <li @click.stop.prevent="batalpopulerkan"><a href=""><i class="fa fa-star-o leftmenu"></i> Batal Populer</a></li>
-      				<li @click.stop.prevent="hapusberita"><a href=""><i class="fa fa-remove leftmenu"></i> Hapus</a></li>
-            </ul>
-          </li>
+		<li role="presentation" class="dropdown" style="list-style-type: none;">
+                  <a class="dropdown-toggle info-number antoo" href="" class="" data-toggle="dropdown" aria-expanded="false" style="color:#fff; font-weight:500;">Tindakan ( <span class="action-cnt"> </span> ) <i class="fa fa-chevron-down"></i></a>
+                  <ul class="dropdown-menu dropdown-usermenu">
+                    <li @click.stop.prevent="aktifkan"><a href=""><i class="fa fa-plus leftmenu"></i> Aktifkan</a></li>
+                    <li @click.stop.prevent="blokir"><a href=""><i class="fa fa-remove red leftmenu"></i> Blokir</a></li>
+                  </ul>
+                </li>
 	      </th>
 	    </tr>
 	  </thead>
 
 	  <tbody>
-	    <tr v-show="beritas.length > 0" v-for="berita in beritas">
+	    <tr v-show="userdatas.length > 0" v-for="userdata in userdatas">
 	      <td class="a-center ">
-					<input type="checkbox" class="flat" name="table_records" data-beritaid="@{{ berita.id }}">
+					<input type="checkbox" class="flat" name="table_records" data-userdataid="@{{ userdata.id }}">
 	      </td>
-	      <td>
-					<i class="fa fa-star red" v-show="berita.populer"></i>
-					<label class="label" v-bind:class="berita.kategoriclass">@{{ berita.kategori }}</label>
-				</td>
-	      <td><a href="{{ URL::to('admin-beritadetail-') }}@{{ berita.id }}-admin-berita" style="text-decoration:underline;">@{{ berita.judul }}</a></td>
-	      <td>@{{ berita.jumlah_komentar }}</td>
-	      <td>@{{ berita.jumlah_share }}</td>
+	      <td><label class="label label-danger" v-show="!userdata.aktif">Blokir</label></td>
+	      <td><a href="{{ URL::to('admin-userdetail') }}-@{{ userdata.id }}" style="text-decoration:underline;">@{{ userdata.nik }}</a></td>
+	      <td>@{{ userdata.username }}</td>
+	      <td>@{{ userdata.email }}</td>
+	      <td>@{{ userdata.name }}</td>
+	      <td>@{{ userdata.lastlogin }}</td>
+	      <td align="right">@{{ userdata.jumlah_berita }}</td>
+	      <td align="right">@{{ userdata.jumlah_komentar }}</td>
+	      <td align="right">@{{ userdata.jumlah_share }}</td>
 	      </td>
 	    </tr>
 	  </tbody>
@@ -99,7 +105,7 @@
 <div class="row"><div class="col-md-12 col-sm-12 col-xs-12">
 	<div class="x_panel">
     <div class="x_content">
-		<h2 style="float:right;">Jumlah Berita : @{{ totalberita }}</h2>
+		<h2 style="float:right;">Jumlah Users : @{{ totaluser }}</h2>
 		</div>
 	</div>
 </div></div>
@@ -115,7 +121,7 @@ canajaxprocess = true;
 vm = new Vue({
   el:'#pagevue',
   data: {
-    beritas:[],
+    userdatas:[],
 		listidselecteds:[],
     firsttime: true,
     pages:[],
@@ -124,40 +130,31 @@ vm = new Vue({
     gofirstpageshow: true,
     golastpageshow: true,
     blur:'',
-		totalberita: 1,
-		filter:'{{ $filter }}',
+		totaluser: 1,
+    filter:'{{ $filter }}',
 		tampilkan:'{{ $tampilkan }}',
 		pencarian:'{{ $pencarian }}',
   },
   methods: {
-    loadberita: function() {
+    loadusers: function() {
 			$('.column-title').show();
         $('.bulk-actions').hide();
       elem = this;
       elem.blur = 'blur';
-      elem.$http.get('{{ URL::to('admin-berita-table') }}?pagego='+elem.pagego
-			+'&filter='+elem.filter
+      elem.$http.get('{{ URL::to('admin-users-table') }}?pagego='+elem.pagego
+      +'&filter='+elem.filter
 			+'&tampilkan='+elem.tampilkan
 			+'&pencarian='+elem.pencarian
 			).then(function(response){
 			vm.clearlistidselecteds();
-			elem.beritas.splice(0, elem.beritas.length);
-			elem.beritas = [];
+			elem.userdatas.splice(0, elem.userdatas.length);
+			elem.userdatas = [];
 			elem.pages.splice(0, elem.pages.length);
 			elem.pages = [];
 	if (response.body.length > 0) {
 	    var jsonObj = $.parseJSON(response.body);
-	    jsonObj.beritas.map( function(item) {
-				if (item.kategori == 'Umum') {
-					item.kategoriclass = 'label-info';
-				} else if (item.kategori == 'Acara') {
-					item.kategoriclass = 'label-success';
-				} else if (item.kategori == 'Pengaduan') {
-					item.kategoriclass = 'label-primary';
-				} else {
-					item.kategoriclass = 'label-danger';
-				}
-	      elem.beritas.push(item);
+	    jsonObj.userdatas.map( function(item) {
+	      elem.userdatas.push(item);
 	    });
 
 			elem.totalberita = jsonObj.totalberita;
@@ -215,19 +212,19 @@ vm = new Vue({
 				checkState = '';
 				$(this).parent().parent().parent().addClass('selected');
 				countChecked();
-				vm.listidselecteds.push($(this).data('beritaid'));
+				vm.listidselecteds.push($(this).data('userdataid'));
 	    });
 	    $('.bulk_action input').on('ifUnchecked', function () {
 				checkState = '';
 				$(this).parent().parent().parent().removeClass('selected');
 				countChecked();
-				deleteArrayValue(vm.listidselecteds, $(this).data('beritaid'));
+				deleteArrayValue(vm.listidselecteds, $(this).data('userdataid'));
 	    });
 	    $('.bulk_action input#check-all').on('ifChecked', function () {
 				checkState = 'all';
 				countChecked();
 				vm.clearlistidselecteds();
-				vm.beritas.map(function(item) {
+				vm.userdatas.map(function(item) {
 					vm.listidselecteds.push(item.id);
 				});
 	    });
@@ -242,11 +239,11 @@ vm = new Vue({
     },
     gopage: function(pagenow) {
       elem.pagego = pagenow;
-      vm.loadberita();
+      vm.loadusers();
     },
     golastpage: function() {
       elem.pagego = elem.totalpage;
-      vm.loadberita();
+      vm.loadusers();
     },
 		addlistid: function(id) {
 			this.listidselecteds.push(id);
@@ -256,43 +253,30 @@ vm = new Vue({
 			this.listidselecteds.splice(0, this.listidselecteds.length);
 			this.listidselecteds = [];
 		},
-		populerkan: function() {
-			if (this.listidselecteds.length > 0 && canajaxprocess) {
+    aktifkan: function() {
+      if (this.listidselecteds.length > 0 && canajaxprocess) {
 				canajaxprocess = false;
 				elem = this;
 				elem.blur = 'blur';
-				elem.$http.post('{{ URL::to('admin-populerkanberitas') }}', {ids: elem.listidselecteds, _token: '{!! csrf_token() !!}'}).then(function(response){
+				elem.$http.post('{{ URL::to('admin-aktifkanusers') }}', {ids: elem.listidselecteds, _token: '{!! csrf_token() !!}'}).then(function(response){
 					canajaxprocess = true;
-					vm.loadberita();
+					vm.loadusers();
 				});
 			}
-		},
-		batalpopulerkan: function() {
-			if (this.listidselecteds.length > 0 && canajaxprocess) {
+    },
+    blokir: function() {
+      if (this.listidselecteds.length > 0 && canajaxprocess) {
 				canajaxprocess = false;
 				elem = this;
 				elem.blur = 'blur';
-				elem.$http.post('{{ URL::to('admin-batalpopulerkanberitas') }}', {ids: elem.listidselecteds, _token: '{!! csrf_token() !!}'}).then(function(response){
+				elem.$http.post('{{ URL::to('admin-blokirusers') }}', {ids: elem.listidselecteds, _token: '{!! csrf_token() !!}'}).then(function(response){
 					canajaxprocess = true;
-					vm.loadberita();
+					vm.loadusers();
 				});
 			}
-		},
-		hapusberita: function() {
-			if (this.listidselecteds.length > 0  && canajaxprocess) {
-				if (confirm('Ingin menghapus berita?')) {
-					elem.blur = 'blur';
-					canajaxprocess = false;
-					elem = this;
-					elem.$http.post('{{ URL::to('admin-deleteberitas') }}', {ids: elem.listidselecteds, _token: '{!! csrf_token() !!}'}).then(function(response){
-						canajaxprocess = true;
-						vm.loadberita();
-					});
-				}
-			}
-		},
+    }
   }
 });
-vm.loadberita();
+vm.loadusers();
 </script>
 @endsection
