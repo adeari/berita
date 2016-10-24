@@ -10,7 +10,7 @@
               </div>
             </div>
             <div class="clearfix"></div>
-            
+
             <div class="row">
               <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
@@ -21,7 +21,7 @@
                         <div class="col-md-6 col-sm-6 col-xs-12">
                           {!! Form::select('kategori', ['Umum' => 'Umum', 'Acara' => 'Acara', 'Pengaduan' => 'Pengaduan', ], 'Umum', ['class' => 'form-control col-md-7 col-xs-12', 'id' => 'judulberita', 'required' => 'required', 'v-model' => 'kategori']) !!}
                         </div>
-                      </div>                    
+                      </div>
                     <div class="item form-group">
                         {!! Form::label('imageberita', 'Gambar', ['class' => 'control-label col-md-3 col-sm-3 col-xs-12']) !!}
                         <div class="col-md-6 col-sm-6 col-xs-12">
@@ -139,7 +139,7 @@
   <svg class="loader loader-8">
     <circle cx="75" cy="75" r="60" fill="transparent" stroke="#AAEA33" stroke-width="6" stroke-linecap="round" stroke-dasharray="385" stroke-dashoffset="385" filter="url(#blur)"></circle>
   </svg>
-</div>		  
+</div>
                       <div class="ln_solid"></div>
                       <div class="form-group" v-show="simpanbuttonshow">
                         <div class="col-md-6 col-md-offset-3">
@@ -167,7 +167,6 @@
       $('.multi.required').on('keyup blur', 'input', function() {
         validator.checkField.apply($(this).siblings().last()[0]);
       });
-
       
       function initToolbarBootstrapBindings() {
           var fonts = ['Serif', 'Sans', 'Arial', 'Arial Black', 'Courier',
@@ -305,7 +304,7 @@
 @if (!is_null($beritaedit))
   vue.judul = '{{ $beritaedit->judul }}';
   vue.beritaid = '{{ $beritaedit->id }}';
-  vue.kategori = '{{ $beritaedit->kategori }}';      
+  vue.kategori = '{{ $beritaedit->kategori }}';
   @if (!is_null($beritaedit->filename))
     vue.imageberitashow = true;
     $('#imagepict').attr('src', '/public/image/{{ $beritaedit->filename }}');

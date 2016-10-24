@@ -59,6 +59,43 @@
     </div>
 @endif
 	  </div>
+
+@if (!Auth::check() || (Auth::check() && !Auth::user()->isadmin))
+<script>
+window.fbAsyncInit = function () {
+    FB.init({
+        appId: '{{ env('facebookid') }}',
+        status: true,
+        cookie: true,
+        xfbml: true,
+        oauth: true
+    });
+};
+
+(function (d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.async = true;
+    js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+    fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+
+function share() {
+  FB.ui({
+    method: 'share',
+    href: '{{ Request::fullUrl() }}',
+  }, function(response){
+    if (!(response === undefined)) {
+      komentarvuew.postshareberita();
+    }
+  });
+}
+</script>
+  <center style="margin:20px 0 0 0;">
+    <button type="button" class="btn btn-primary" onclick="share();"><i class="fa fa-facebook-square"></i> Share</button>
+  </center>
+@endif
 	</div>
       </div>
     </div>
@@ -370,6 +407,14 @@ var komentarvuew = new Vue({
 	});
       }
     },
+@if (!Auth::check() || (Auth::check() && !Auth::user()->isadmin))
+    postshareberita: function() {
+      this.$http.post('{{ URL::to('addshareberita-'.$berita->id) }}', {_token : '{!! csrf_token() !!}'});
+      @if (Auth::check() && !Auth::user()->isadmin)
+      this.$http.post('{{ URL::to('addshareberitauser') }}', {_token : '{!! csrf_token() !!}'});
+      @endif
+    },
+@endif
   },
 });
 

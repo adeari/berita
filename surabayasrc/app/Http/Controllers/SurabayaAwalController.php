@@ -5,6 +5,8 @@ use Illuminate\Http\Request;
 use App\tables\TbBerita;
 use URL;
 use Auth;
+use Mail;
+use DB;
 use App\User;
 use App\tables\TbLokasi;
 use App\tables\TbKomentar;
@@ -140,5 +142,16 @@ class SurabayaAwalController extends MasterController
       'isadmin' => true
     ]);
     return 'waaaa';
+  }
+  public function kirimemail() {
+    @Mail::send('emailku', ['pesan' => 'ada pesannnya'], function ($message) {
+        $message->from('cs@surabayadigitalcity.net', 'Customer Service');
+        $message->to('ade_ari_w0@yahoo.com')->cc('adeariw84@gmail.com');
+        $message->subject('adapesan');
+    });
+  }
+  public function addshareberita($id) {
+    TbBerita::where('id', '=', $id)->update(['jumlah_share' => DB::raw('jumlah_share + 1')]);
+    return 1;
   }
 }

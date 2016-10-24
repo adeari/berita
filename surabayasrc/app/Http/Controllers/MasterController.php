@@ -13,7 +13,6 @@ use App\tables\TbBerita;
 
 class MasterController extends BaseController
 {
-	var $datasearch;
 	public function generateRandomString($length = 10) {
 		$characters = '0123456789abcdefghijklmnopqrstuvwxyz';
 		$charactersLength = strlen($characters);

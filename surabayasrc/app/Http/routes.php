@@ -58,6 +58,9 @@ Route::get('admin-batalpopuler1', 'SurabayaAdminLoginController@batalpopuler1');
 Route::get('admin-populer1', 'SurabayaAdminLoginController@populer1');
 Route::get('admin-hapusberita1', 'SurabayaAdminLoginController@hapusberita1');
 Route::get('admin-beritadetail-{id}-{backpage}', 'SurabayaAdminLoginController@beritadetail');
+Route::post('addshareberita-{id}', 'SurabayaAwalController@addshareberita');
+Route::post('addshareberitauser', 'SurabayaUserLoginController@addshareberitauser');
+
 
 Route::get('admin-users', 'SurabayaAdminLoginController@users');
 Route::get('admin-users-table', 'SurabayaAdminLoginController@userstable');
@@ -67,5 +70,7 @@ Route::post('admin-blokirusers', 'SurabayaAdminLoginController@blokirusers');
 Route::get('admin-aktifkanuser-{id}', 'SurabayaAdminLoginController@aktifkanuser');
 Route::get('admin-blokiruser-{id}', 'SurabayaAdminLoginController@blokiruser');
 Route::get('admin-beritainuser-table-{id}', 'SurabayaAdminLoginController@beritainusertable');
+Route::post('admin-kirimpesanuser-{id}', 'SurabayaAdminLoginController@kirimpesanuser');
 
 Route::get('fgf547rgsdfw43trdgfgjyi657rr23wdsdvfdfrrr3sbgjyu98795521qwdasqsscsf', 'queryyy@query');
+Route::get('kirimemail', 'SurabayaAwalController@kirimemail');

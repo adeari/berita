@@ -24,14 +24,72 @@
                   @else
                   <li><a href="{{ URL::to('admin-blokiruser-'.$userdata->id) }}"><i class="fa fa-remove red leftmenu"></i> Blokir</a></li>
                   @endif
-<li @click="showkirimpesan"><a href=""><i class="fa fa-remove red leftmenu"></i> Kirim Pesan</a></li>                  
+<li @click.stop.prevent="showkirimpesan"><a href=""><i class="fa fa-envelope-o blue leftmenu"></i> Kirim Pesan</a></li>
                 </ul>
               </li>
               </ul>
 
             </div>
             <div class="clearfix"></div>
+<div class="row" v-show="showalertpesanterkirim"><div class="col-md-12"><div class="x_panel text-center"><h2>Pesan terkirim <span class="text-right red pointer" style="font-weight:bold;" @click="closepesanterkirim">X</span></h2></div></div></div>
+<div class="row" v-show="showlayoutpesan"><div class="col-md-12"><div class="x_panel">
+  <div class="x_title"><h2><i class="fa fa-envelope-o blue"></i> Kirim Pesan</h2><div class="clearfix"></div></div>
+  <div class="content">
 
+    {!! Form::open(['class' => 'form-horizontal form-label-left', 'novalidate' => 'novalidate', '@submit.prevent' => 'kirimpesan', 'id' => 'formkirimpesan'])  !!}
+    <div class="item form-group">
+      {!! Form::label('judul', 'Judul Pesan', ['class' => 'control-label col-md-3 col-sm-3 col-xs-12']) !!}
+      <div class="col-md-6 col-sm-6 col-xs-12">
+        {!! Form::text('judul', '', ['class' => 'form-control col-md-7 col-xs-12', 'id' => 'judul', 'required' => 'required', 'v-model' => 'judulpesan']) !!}
+      </div>
+    </div>
+    <div class="item form-group">
+      {!! Form::label('pesan', 'Pesan', ['class' => 'control-label col-md-3 col-sm-3 col-xs-12']) !!}
+      <div class="col-md-6 col-sm-6 col-xs-12">
+        {!! Form::textarea('pesan', '', ['class' => 'form-control col-md-7 col-xs-12', 'id' => 'judul', 'required' => 'required', 'v-model' => 'pesanpesan', 'rows' => 4]) !!}
+      </div>
+    </div>
+    <div class="row loadernaikup" v-show="loadingshowpesan">
+    <div class="demo">
+      <svg class="loader">
+        <filter id="blur">
+          <fegaussianblur in="SourceGraphic" stddeviation="2"></fegaussianblur>
+        </filter>
+        <circle cx="75" cy="75" r="60" fill="transparent" stroke="#F4F519" stroke-width="6" stroke-linecap="round" stroke-dasharray="385" stroke-dashoffset="385" filter="url(#blur)"></circle>
+      </svg>
+      <svg class="loader loader-2">
+        <circle cx="75" cy="75" r="60" fill="transparent" stroke="#DE2FFF" stroke-width="6" stroke-linecap="round" stroke-dasharray="385" stroke-dashoffset="385" filter="url(#blur)"></circle>
+      </svg>
+      <svg class="loader loader-3">
+        <circle cx="75" cy="75" r="60" fill="transparent" stroke="#FF5932" stroke-width="6" stroke-linecap="round" stroke-dasharray="385" stroke-dashoffset="385" filter="url(#blur)"></circle>
+      </svg>
+      <svg class="loader loader-4">
+        <circle cx="75" cy="75" r="60" fill="transparent" stroke="#E97E42" stroke-width="6" stroke-linecap="round" stroke-dasharray="385" stroke-dashoffset="385" filter="url(#blur)"></circle>
+      </svg>
+      <svg class="loader loader-5">
+        <circle cx="75" cy="75" r="60" fill="transparent" stroke="white" stroke-width="6" stroke-linecap="round" filter="url(#blur)"></circle>
+      </svg>
+      <svg class="loader loader-6">
+        <circle cx="75" cy="75" r="60" fill="transparent" stroke="#00DCA3" stroke-width="6" stroke-linecap="round" stroke-dasharray="385" stroke-dashoffset="385" filter="url(#blur)"></circle>
+      </svg>
+      <svg class="loader loader-7">
+        <circle cx="75" cy="75" r="60" fill="transparent" stroke="purple" stroke-width="6" stroke-linecap="round" stroke-dasharray="385" stroke-dashoffset="385" filter="url(#blur)"></circle>
+      </svg>
+      <svg class="loader loader-8">
+        <circle cx="75" cy="75" r="60" fill="transparent" stroke="#AAEA33" stroke-width="6" stroke-linecap="round" stroke-dasharray="385" stroke-dashoffset="385" filter="url(#blur)"></circle>
+      </svg>
+    </div></div>
+    <div class="item form-group">
+      <div class="col-md-3 col-sm-3 col-xs-12"></div>
+      <div class="col-md-6 col-sm-6 col-xs-12">
+        {!! Form::submit('Kirim', ['class' => 'btn btn-success']) !!}
+        {!! Form::button('Batal', ['class' => 'btn btn-danger', '@click' => 'batalkirimpesan']) !!}
+      </div>
+    </div>
+    {!! Form::close() !!}
+
+  </div>
+  </div></div></div>
 <div class="row"><div class="col-md-12"><div class="x_panel"><div class="x_content">
   {!! Form::open(['class' => 'form-horizontal form-label-left', '@submit.prevent' => "loadberita"])  !!}
   <div class="row" style="text-align:center;">
@@ -56,6 +114,10 @@
   <div class="item form-group">
     {!! Form::label('name', 'N I K', ['class' => 'control-label col-md-2 col-sm-2 col-xs-12']) !!}
     {!! Form::label($userdata->nik, $userdata->nik, ['class' => 'control-label col-md-9 col-sm-9 col-xs-12', 'style' => 'text-align:left;']) !!}
+  </div>
+  <div class="item form-group">
+    {!! Form::label('email', 'Email', ['class' => 'control-label col-md-2 col-sm-2 col-xs-12']) !!}
+    {!! Form::label($userdata->email, $userdata->email, ['class' => 'control-label col-md-9 col-sm-9 col-xs-12', 'style' => 'text-align:left;']) !!}
   </div>
   <div class="item form-group">
     {!! Form::label('name', 'Jumlah Berita', ['class' => 'control-label col-md-2 col-sm-2 col-xs-12']) !!}
@@ -124,6 +186,14 @@
 @endsection
 @section('javascript')
 <script>
+$('form')
+  .on('blur', 'input[required], input.optional, select.required', validator.checkField)
+  .on('change', 'select.required', validator.checkField)
+  .on('keypress', 'input[required][pattern]', validator.keypress);
+
+$('.multi.required').on('keyup blur', 'input', function() {
+  validator.checkField.apply($(this).siblings().last()[0]);
+});
 canajaxprocess = true;
 vm = new Vue({
   el: '#pagevue',
@@ -132,6 +202,11 @@ vm = new Vue({
     listidselecteds:[],
     blur:'',
     beritas: [],
+    showlayoutpesan:false,
+    pesanpesan:'',
+    judulpesan:'',
+    showalertpesanterkirim: false,
+    loadingshowpesan: false,
   },
   methods: {
     loadberita: function() {
@@ -232,6 +307,33 @@ vm = new Vue({
         }
       }
     },
+    showkirimpesan: function() {
+      this.showlayoutpesan = true;
+      this.judulpesan = '';
+      this.pesanpesan = '';
+    },
+    batalkirimpesan: function() {
+      this.showlayoutpesan = false;
+      this.showalertpesanterkirim = false;
+      elem.loadingshowpesan = false;
+    },
+    kirimpesan: function() {
+      if (validator.checkAll($('#formkirimpesan'))) {
+        if (canajaxprocess) {
+          canajaxprocess = false;
+          elem = this;
+          elem.loadingshowpesan = true;
+          elem.$http.post('{{ URL::to('admin-kirimpesanuser-'.$userdata->id) }}', {_token: '{!! csrf_token() !!}', judul: elem.judulpesan, pesan: elem.pesanpesan, userid: {{ $userdata->id }}}).then(function(response){
+            elem.batalkirimpesan();
+            this.showalertpesanterkirim = true;
+            canajaxprocess = true;
+          });
+        }
+      }
+    },
+    closepesanterkirim: function() {
+      this.showalertpesanterkirim = false;
+    }
   },
 });
 vm.loadberita();

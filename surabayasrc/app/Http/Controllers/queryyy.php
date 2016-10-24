@@ -16,8 +16,11 @@ class queryyy extends BaseController {
 //DB::statement("ALTER TABLE `tbberita` ADD `jumlah_komentar` INT NOT NULL DEFAULT '0' AFTER `useridinput`, ADD `jumlah_share` INT NOT NULL DEFAULT '0' AFTER `jumlah_komentar`;");
 //DB::statement("ALTER TABLE `users` ADD `jumlah_berita` INT NOT NULL DEFAULT '0' AFTER `gambar`, ADD `jumlah_komentar` INT NOT NULL DEFAULT '0' AFTER `jumlah_berita`, ADD `jumlah_share` INT NOT NULL DEFAULT '0' AFTER `jumlah_komentar`;");
 //DB::statement("ALTER TABLE `tbberita` ADD `populer` BOOLEAN NOT NULL DEFAULT FALSE AFTER `jumlah_share`;");
+// DB::statement("ALTER TABLE `users` ADD `aktif` BOOLEAN NOT NULL DEFAULT TRUE AFTER `jumlah_share`;");
+// DB::statement("CREATE TABLE `tbadminpesan` ( `id` int(11) NOT NULL,  `judul` text NOT NULL,  `pesan` text NOT NULL,  `userid` bigint(20) NOT NULL,  `updated_at` datetime NOT NULL,  `created_at` datetime NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8;");
+// DB::statement("ALTER TABLE `tbadminpesan` ADD PRIMARY KEY (`id`);");
+// DB::statement("ALTER TABLE `tbadminpesan` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;");
 
-DB::statement("ALTER TABLE `users` ADD `aktif` BOOLEAN NOT NULL DEFAULT TRUE AFTER `jumlah_share`;");
 
 DB::statement("UPDATE tbberita SET jumlah_komentar = (select count(*) from tbkomentar where tbkomentar.idberita = tbberita.id)");
 DB::statement("UPDATE users SET jumlah_komentar = (select count(*) from tbkomentar where tbkomentar.useridinput = users.id)");

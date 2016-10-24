@@ -157,7 +157,7 @@ vm = new Vue({
 	      elem.userdatas.push(item);
 	    });
 
-			elem.totalberita = jsonObj.totalberita;
+			elem.totaluser = jsonObj.totaluser;
       elem.totalpage = jsonObj.totalpage;
       startpage = 1;
       if (elem.pagego > 3 && elem.totalpage > 5) {

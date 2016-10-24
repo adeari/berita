@@ -29,13 +29,13 @@ class SurabayaUserLoginController extends MasterController
     	$return['success'] = '1' ;
     	$return['msg'] = 'success' ;
     	$return['filename'] = null;
-    	
+
     	foreach($_FILES as $file)
     	{
     		$folderupload = public_path().'/image/';
     		$sizefile = $file['size'];
     		$filename = $file['name'];
-    		
+
     		$extensionexplode = explode(".", $filename);
     		$extensioncount = count($extensionexplode) - 1;
     		if (strlen($extensioncount) == 0) {
@@ -81,14 +81,14 @@ class SurabayaUserLoginController extends MasterController
     	}
     	return $return;
     }
-    
+
     private function resizeimage($pathnewfilename) {
       if (!empty($pathnewfilename) && file_exists($pathnewfilename)) {
 	$image_info = getimagesize($pathnewfilename);
 	$standradwidth = $image_info[0];
 	$standardheight = $image_info[1];
 	$imagetype = $image_info[2];
-	
+
 	$width = 500;
 	if ($width < $standradwidth) {
 	  $height = $width * $standardheight / $standradwidth;
@@ -116,7 +116,7 @@ class SurabayaUserLoginController extends MasterController
 	}
       }
     }
-    
+
 	public function addberita(Request $request) {
 		$return = $this->uploadfile();
 		if ($return['success'] == '1') {
@@ -130,7 +130,7 @@ class SurabayaUserLoginController extends MasterController
 			    $deletedfile = $tbberita->filename;
 			  }
 			}
-			
+
 			$tbberita->judul = $this->removeUnusedCharacter($request->input('judul'));
 			$tbberita->deskripsi = $this->removeUnusedCharacter($request->input('deskripsi'));
 			$tbberita->kategori = $this->removeUnusedCharacter($request->input('kategori'));
@@ -159,7 +159,7 @@ class SurabayaUserLoginController extends MasterController
   public function saya() {
     return view('user.saya', ['profile' => User::find(Auth::user()->id)]);
   }
-  
+
   public function changepassword(Request $request) {
     $this->gantipassword($request);
   }
@@ -207,7 +207,7 @@ class SurabayaUserLoginController extends MasterController
     $this->deleteberita($request);
     return 1;
   }
-  
+
   public function addkomentar(Request $request) {
     $return = $this->uploadfile();
     $hapusfile = '';
@@ -229,7 +229,7 @@ class SurabayaUserLoginController extends MasterController
       } else if (isset($request->hapusgambar)) {
 	$tbkomentar->gambar = null;
       }
-      
+
       if (!isset($request->idkomentar)) {
 	$tbkomentar->save();
 	DB::statement("UPDATE tbberita SET jumlah_komentar = (select count(*) from tbkomentar where tbkomentar.idberita = ".$request->idberita.") where id = ".$request->idberita);
@@ -237,7 +237,7 @@ class SurabayaUserLoginController extends MasterController
       } else {
 	$tbkomentar->update();
       }
-      
+
       if (!empty($hapusfile) && file_exists($folderupload.$hapusfile)) {
 	unlink($folderupload.$hapusfile);
       }
@@ -246,5 +246,9 @@ class SurabayaUserLoginController extends MasterController
   }
   public function komentarhapus(Request $request) {
     return $this->komentar1deleted($request->idkomentar, true);
+  }
+  public function addshareberitauser() {
+    User::where('id', '=', Auth::user()->id)->update(['jumlah_share' => DB::raw('jumlah_share + 1')]);
+    return 1;
   }
 }

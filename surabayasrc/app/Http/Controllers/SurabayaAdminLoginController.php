@@ -5,11 +5,13 @@ use Illuminate\Http\Request;
 
 use App\tables\TbBerita;
 use App\tables\TbKomentar;
+use App\tables\TbAdminPesan;
 
 use DB;
 use URL;
 use Auth;
 use App\User;
+use Mail;
 
 class SurabayaAdminLoginController extends MasterController
 {
@@ -214,22 +216,23 @@ class SurabayaAdminLoginController extends MasterController
       $page = (intval($request->pagego) - 1) * $limit;
     }
 
+    $qrydata = User::where('isadmin', '=', false);
 		if ($request->tampilkan == 'Baru Login') {
-			$qrydata = User::orderBy('lastlogin', 'desc');
+			$qrydata = $qrydata->orderBy('lastlogin', 'desc');
 		} else if ($request->tampilkan == 'Terlama Login') {
-			$qrydata = User::orderBy('lastlogin', 'asc');
+			$qrydata = $qrydata->orderBy('lastlogin', 'asc');
 		} else if ($request->tampilkan == 'Terbanyak Berita') {
-			$qrydata = User::orderBy('jumlah_berita', 'desc');
+			$qrydata = $qrydata->orderBy('jumlah_berita', 'desc');
 		} else if ($request->tampilkan == 'Tersedikit Berita') {
-			$qrydata = User::orderBy('jumlah_share', 'asc');
+			$qrydata = $qrydata->orderBy('jumlah_share', 'asc');
 		} else if ($request->tampilkan == 'Terbanyak Komentar') {
-			$qrydata = User::orderBy('jumlah_komentar', 'desc');
+			$qrydata = $qrydata->orderBy('jumlah_komentar', 'desc');
 		} else if ($request->tampilkan == 'Tersedikit Komentar') {
-			$qrydata = User::orderBy('jumlah_komentar', 'asc');
+			$qrydata = $qrydata->orderBy('jumlah_komentar', 'asc');
 		} else if ($request->tampilkan == 'Terbanyak Share') {
-			$qrydata = User::orderBy('jumlah_share', 'desc');
+			$qrydata = $qrydata->orderBy('jumlah_share', 'desc');
 		} else if ($request->tampilkan == 'Tersedikit Share') {
-			$qrydata = User::orderBy('jumlah_share', 'asc');
+			$qrydata = $qrydata->orderBy('jumlah_share', 'asc');
 		}
 
 		if (!empty($request->filter)) {
@@ -241,13 +244,13 @@ class SurabayaAdminLoginController extends MasterController
 		}
 
 		if (!empty($request->pencarian)) {
-      $this->datasearch = $request->pencarian;
-			$qrydata = $qrydata->where(function($query)
+      $pencarian = $request->pencarian;
+			$qrydata = $qrydata->where(function($query) use ($pencarian)
 			{
-					$query->orWhereRaw('username like \'%'.$this->datasearch.'%\'')
-								->orWhereRaw('email like \'%'.$this->datasearch.'%\'')
-								->orWhereRaw('nik like \'%'.$this->datasearch.'%\'')
-								->orWhereRaw('name like \'%'.$this->datasearch.'%\'');
+					$query->orWhereRaw('username like \'%'.$pencarian.'%\'')
+								->orWhereRaw('email like \'%'.$pencarian.'%\'')
+								->orWhereRaw('nik like \'%'.$pencarian.'%\'')
+								->orWhereRaw('name like \'%'.$pencarian.'%\'');
 			});
 		}
 
@@ -342,5 +345,26 @@ class SurabayaAdminLoginController extends MasterController
     return [
       'beritas' => $beritas,
     ];
+  }
+  public function kirimpesanuser($id, Request $request) {
+    if (!empty($request->judul) && !empty($request->pesan)) {
+      $tbadminpesan = new TbAdminPesan();
+      $tbadminpesan->judul = $request->judul;
+      $tbadminpesan->pesan = $request->pesan;
+      $tbadminpesan->userid = $id;
+      $tbadminpesan->save();
+
+      if (!is_null(Auth::user()->email) && !empty(Auth::user()->email) &&  filter_var( Auth::user()->email, FILTER_VALIDATE_EMAIL)) {
+        $usersend = User::find($id);
+        $dataemail = ['judul' => $request->judul, 'toemail' => $usersend->email];
+        @Mail::send('emailku', ['pesan' => $request->pesan], function ($message) use ($dataemail) {
+            $message->from('cs@surabayadigitalcity.net', 'Customer Service');
+            $message->to($dataemail['toemail']);
+            $message->subject($dataemail['judul']);
+        });
+        return 1;
+      }
+      return 2;
+    }
   }
 }

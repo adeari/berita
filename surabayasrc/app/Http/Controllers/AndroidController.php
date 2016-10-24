@@ -19,14 +19,14 @@ class AndroidController extends MasterController
 	$tbberita = new TbBerita();
       } else {
 	$tbberita = TbBerita::find($request->idberita);
-	
+
 	$imagedirectory = 'public/image/';
 	if (($request->imageaction == 'hapus' || $request->imageaction == 'ubah') && !is_null($tbberita->filename)
 	  && !empty($tbberita->filename) && file_exists($imagedirectory.$tbberita->filename) ) {
 	  unlink($imagedirectory.$tbberita->filename);
 	}
       }
-      
+
       $tbberita->judul = $this->removeUnusedCharacter($request->input('judul'));
       $tbberita->deskripsi = $this->removeUnusedCharacter($request->input('deskripsi'));
       $tbberita->kategori = $this->removeUnusedCharacter($request->input('kategori'));
@@ -39,7 +39,7 @@ class AndroidController extends MasterController
 	    && $request->imageaction == 'hapus') {
 	    $tbberita->filename = null;
 	  }
-      
+
       if (empty($request->idberita)) {
 	$tbberita->save();
 	DB::statement("UPDATE users SET jumlah_berita = (select count(*) from tbberita where tbberita.useridinput = ".Auth::user()->id.") where id=".Auth::user()->id);
@@ -55,7 +55,7 @@ class AndroidController extends MasterController
     $this->commonactionn();
   }
     $datas = [];
-    $beritas = TbBerita::orderBy('updated_at', 'desc')->get();
+    $beritas = TbBerita::where('populer', '=', true)-> orderBy('updated_at', 'desc')->get();
     foreach ($beritas as $berita) {
       $row['id'] = $berita->id;
       $row['judul'] = $berita->judul;
@@ -68,7 +68,7 @@ class AndroidController extends MasterController
     }
     return $datas;
   }
-  
+
   public function terbaru(Request $request) {
     if ($this->ceklogin($request) == 1) {
       $this->commonactionn();
@@ -87,7 +87,7 @@ class AndroidController extends MasterController
     }
     return $datas;
   }
-  
+
   public function beritadetail($id, Request $request) {
   if ($this->ceklogin($request) == 1) {
     $this->commonactionn();
@@ -102,7 +102,7 @@ class AndroidController extends MasterController
       $row['filename'] = URL::to('public/image/'.$berita->filename);
     } else {
       $row['filename'] = '';
-    }    
+    }
     $row['komentars'] = $this->komentardata($id, $request);
     return $row;
   }
@@ -131,7 +131,7 @@ class AndroidController extends MasterController
   public function androidlogin(Request $request) {
     return $this->ceklogin($request);
   }
-  
+
   public function artikelname($artikelname,Request $request) {
   if ($this->ceklogin($request) == 1) {
     $this->commonactionn();
@@ -169,14 +169,14 @@ class AndroidController extends MasterController
     }
     return '0';
   }
-  
+
   public function cek(Request $request) {
     if ($this->ceklogin($request) == 1) {
       return Auth::user()->id;
     }
     return '0';
   }
-  
+
   public function komentardeleted(Request $request) {
     if ($this->ceklogin($request) == 1) {
       $this->commonactionn();
@@ -184,7 +184,7 @@ class AndroidController extends MasterController
     }
     return '0';
   }
-  
+
   public function beritadeleted(Request $request) {
     if ($this->ceklogin($request) == 1) {
       $this->commonactionn();
@@ -193,7 +193,7 @@ class AndroidController extends MasterController
     }
     return '0';
   }
-  
+
   public function komentaradd(Request $request) {
     if ($this->ceklogin($request) == 1) {
       $this->commonactionn();
@@ -208,10 +208,10 @@ class AndroidController extends MasterController
 	  unlink($imagedirectory.$tbkomentar->gambar);
 	}
       }
-      
+
       $tbkomentar->useridinput = Auth::user()->id;
       $tbkomentar->komentar = $request->komentar;
-            
+
       if (!empty($request->input('gambar'))) {
 	$tbkomentar->gambar = $request->input('gambar');
       } else if (empty($request->imageaction) && empty($request->idkomentar)) {
@@ -220,7 +220,7 @@ class AndroidController extends MasterController
 	&& $request->imageaction == 'hapus') {
 	$tbkomentar->gambar = null;
       }
-      
+
       if (empty($request->idkomentar)) {
 	$tbkomentar->save();
 	DB::statement("UPDATE tbberita SET jumlah_komentar = (select count(*) from tbkomentar where tbkomentar.idberita = ".$request->idberita.") where id= ".$request->idberita);
@@ -242,7 +242,7 @@ class AndroidController extends MasterController
     }
     return $this->getkomentardata($canaccess, $idberita);
   }
-  
+
   public function profileuser(Request $request) {
   if ($this->ceklogin($request) == 1) {
     $this->commonactionn();
