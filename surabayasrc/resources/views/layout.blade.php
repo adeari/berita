@@ -41,9 +41,9 @@
   </li>
 @else
   <li v-bind:class="{ 'active': isloginactive }"><a href="{{ URL::to('login') }}"><i class="fa fa-key"></i> Login</a>
-@endif	
+@endif
                 </li>
-                
+
             	<li v-bind:class="{ 'active': isberitaactive }"><a><i class="fa fa-star-o"></i> Berita <span class="fa fa-chevron-down"></span></a>
 					<ul class="nav child_menu" v-bind:style="beritastyle">
                       	<li v-bind:class="{ 'current-page': populer }"><a href="{{ URL::to('populer') }}"><i class="fa fa-trophy"></i> Populer</a></li>
@@ -58,7 +58,7 @@
                       	<li v-bind:class="{ 'current-page': androidpage }"><a href="{{ URL::to('androidpage') }}"><i class="fa fa-android"></i> Android</a></li>
                     </ul>
                 </li>
-                
+
                 </ul>
             </div>
             <!-- /sidebar menu -->
@@ -76,7 +76,7 @@
         </div>
         <!-- /top navigation -->
 	    <div id="appcontent">@yield('content')</div>
-        <footer></footer>
+        <footer style="text-align:center">@surabayadigitalcity</footer>
       </div>
     </div>
 

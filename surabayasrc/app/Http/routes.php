@@ -71,6 +71,9 @@ Route::get('admin-aktifkanuser-{id}', 'SurabayaAdminLoginController@aktifkanuser
 Route::get('admin-blokiruser-{id}', 'SurabayaAdminLoginController@blokiruser');
 Route::get('admin-beritainuser-table-{id}', 'SurabayaAdminLoginController@beritainusertable');
 Route::post('admin-kirimpesanuser-{id}', 'SurabayaAdminLoginController@kirimpesanuser');
+Route::post('admin-grafik-data', 'SurabayaAdminLoginController@grafikdata');
+
+Route::get('admin-broadcast-message', 'SurabayaAdminLoginController@broadcastmessage');
 
 Route::get('admin-grafik', 'SurabayaAdminLoginController@grafik');
 

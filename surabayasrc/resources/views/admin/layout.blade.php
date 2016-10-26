@@ -38,6 +38,7 @@
 		    <li v-bind:class="{ 'current-page': admin-berita }"><a href="{{ URL::to('admin-berita') }}"><i class="fa fa-trophy"></i> Berita</a></li>
 		    <li v-bind:class="{ 'current-page': admin-users }"><a href="{{ URL::to('admin-users') }}"><i class="fa fa-user"></i> Users</a></li>
 		    <li v-bind:class="{ 'current-page': admin-grafik }"><a href="{{ URL::to('admin-grafik') }}"><i class="fa fa-area-chart"></i> Grafik</a></li>
+		    <li v-bind:class="{ 'current-page': admin-broadcast-message }"><a href="{{ URL::to('admin-broadcast-message') }}"><i class="fa fa-envelope-o"></i> Pesan Broadcast</a></li>
                   </ul>
                 </li>
 
@@ -59,7 +60,7 @@
         </div>
         <!-- /top navigation -->
 	    <div id="appcontent">@yield('content')</div>
-        <footer></footer>
+        <footer style="text-align:center">@surabayadigitalcity</footer>
       </div>
     </div>
 

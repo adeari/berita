@@ -10,7 +10,22 @@
               </div>
             </div>
             <div class="clearfix"></div>
-
+<div class="row tile_count" style="margin-bottom:-5px;"><div class="col-md-12 col-sm-12 col-xs-12">
+	<div class="x_panel">
+    <div class="x_content">
+      <div class="col-md-4 col-sm-4 col-xs-6 tile_stats_count">
+        <span class="count_top"><i class="fa fa-user"></i> Total Users</span>
+        <div class="count text-center">{{ $totaluser }}</div>
+      </div>
+      <div class="col-md-4 col-sm-4 col-xs-6 tile_stats_count">
+        <span class="count_top"><i class="fa fa-trophy"></i> Total Berita</span>
+        <div class="count text-center">{{ $totalberita }}</div>
+      </div>
+      <div class="col-md-4 col-sm-4 col-xs-6 tile_stats_count">
+        <span class="count_top"><i class="fa fa-comment-o"></i> Total Komentar</span>
+        <div class="count text-center">{{ $totalkomentar }}</div>
+      </div>
+</div></div></div></div>
 <div class="row"><div class="col-md-12 col-sm-12 col-xs-12">
 	<div class="x_panel">
     <div class="x_content">
@@ -36,7 +51,7 @@
         , '10' =>'Oktober'
         , '11' =>'November'
         , '12' =>'Desember'
-        ], $month, ['class' => 'form-control col-md-6 col-xs-6 pointer', 'v-model' => 'bulan', '@change' => 'loadgrafik']) !!}
+        ], $month, ['class' => 'form-control col-md-6 col-xs-6 pointer', 'v-model' => 'bulan', 'id' => 'bulananopt', '@change' => 'loadgrafik']) !!}
       </div>
     </div>
     <div class="item form-group">
@@ -48,13 +63,13 @@
         </div>
       </div>
       <div class="col-md-3 col-sm-3 col-xs-12">
-        {!! Form::select('tahun', $optionyear, $minyear, ['class' => 'form-control col-md-6 col-xs-6 pointer', 'v-model' => 'tahun', '@change' => 'loadgrafik']) !!}
+        {!! Form::select('tahun', $optionyear, $yearnow, ['class' => 'form-control col-md-6 col-xs-6 pointer', 'v-model' => 'tahun', '@change' => 'loadgrafik']) !!}
       </div>
       <div class="col-md-2 col-sm-2 col-xs-12" v-show="selectgraph == 'tahunan'">
         Sampai Tahun
       </div>
       <div class="col-md-3 col-sm-3 col-xs-12" v-show="selectgraph == 'tahunan'">
-        {!! Form::select('tahunakhir',$optionyear, $maxyear, ['class' => 'form-control col-md-6 col-xs-6 pointer', 'v-model' => 'tahunakhir', '@change' => 'loadgrafik']) !!}
+        {!! Form::select('tahunakhir',$optionyear, $maxyear, ['class' => 'form-control col-md-6 col-xs-6 pointer', 'id' => 'tahunannopt', 'v-model' => 'tahunakhir', '@change' => 'loadgrafik']) !!}
       </div>
     </div>
 		{!! Form::close() !!}
@@ -67,21 +82,6 @@
     <div class="x_panel">
       <div class="x_title">
         <h2>Grafik Jumlah Berita & Komentar</h2>
-        <ul class="nav navbar-right panel_toolbox">
-          <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-          </li>
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-            <ul class="dropdown-menu" role="menu">
-              <li><a href="#">Settings 1</a>
-              </li>
-              <li><a href="#">Settings 2</a>
-              </li>
-            </ul>
-          </li>
-          <li><a class="close-link"><i class="fa fa-close"></i></a>
-          </li>
-        </ul>
         <div class="clearfix"></div>
       </div>
       <div class="x_content">
@@ -92,8 +92,6 @@
     </div>
   </div>
 </div>
-
-
     </div>
 </div>
         <!-- /page content -->
@@ -104,43 +102,6 @@
 <script src="{{ URL::to('pluginhtml/gentelella/vendors') }}/echarts/dist/echarts.min.js"></script>
 <script src="{{ URL::to('pluginhtml/gentelella/vendors') }}/echarts/map/js/world.js"></script>
 <script>
-canajaxprocess = true;
-vm = new Vue({
-  el:'#pagevue',
-  data: {
-    firsttime: true,
-    bulan:'{{ $month }}',
-    tahun:'{{ $minyear }}',
-    tahunakhir: '{{ $maxyear }}',
-    selectgraph:'bulanan',
-  },
-  methods: {
-    loadgrafik: function() {
-      console.log($("#bulanselect").val());
-
-      komponengraph.xAxis[0].data = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-      komponengraph.series[0].data = [1,2,3,4,5,6,7];
-      komponengraph.series[1].data = [5,6,7,8,9,2,6];
-      echartLine.setOption(komponengraph);
-    },
-    showgrafikmonthly: function() {
-      this.selectgraph = 'bulanan';
-      this.loadgrafik();
-    },
-    showgrafikyearly: function() {
-      this.selectgraph = 'tahunan';
-      this.loadgrafik();
-    }
-  }
-});
-
-$('#bulanselect').on('ifClicked',function(e){
-  vm.showgrafikmonthly();
-});
-$('#tahunselect').on('ifClicked',function(e){
-  vm.showgrafikyearly();
-});
-
 var theme = {
         color: [
             'orange', 'green', 'red', 'yellow',
@@ -150,9 +111,11 @@ var theme = {
         title: {
             itemGap: 8,
             textStyle: {
-                fontWeight: 'normal',
-                color: '#408829'
-            }
+                fontWeight: 'bold'
+            },
+            subtextStyle: {
+                color: 'black'
+            },
         },
 
         dataRange: {
@@ -353,8 +316,12 @@ var theme = {
         }
     };
 
-var echartLine = echarts.init(document.getElementById('echart_line'), theme);
+
 var komponengraph = {
+  title: {
+    text:'',
+    subtext:''
+  },
   tooltip: {
     trigger: 'axis'
   },
@@ -421,6 +388,68 @@ var komponengraph = {
     data: []
   }]
 };
+
+canajaxprocess = true;
+vm = new Vue({
+  el:'#pagevue',
+  data: {
+    firsttime: true,
+    bulan:'{{ $month }}',
+    tahun:'{{ $yearnow }}',
+    tahunakhir: '{{ $maxyear }}',
+    selectgraph:'bulanan',
+  },
+  methods: {
+    loadgrafik: function() {
+      elem = this;
+      if (elem.selectgraph == 'bulanan') {
+        elem.$http.post('{{ URL::to('admin-grafik-data') }}', { optselected : elem.selectgraph, yearselected : elem.tahun, monthselected : elem.bulan, _token: '{!! csrf_token() !!}' }).then(function(response){
+          if (response.body.length > 0 && elem.selectgraph == 'bulanan') {
+            var jsonObj = $.parseJSON(response.body);
+            komponengraph.title.text = 'Grafik Bulanan';
+            komponengraph.title.subtext = $('#bulananopt>option:selected').text()+' '+elem.tahun;
+            komponengraph.xAxis[0].data = jsonObj.xaxixtitle;
+            komponengraph.series[0].data = jsonObj.beritacount;
+            komponengraph.series[1].data = jsonObj.komentarcount;
+            echartLine = echarts.init(document.getElementById('echart_line'), theme);
+            echartLine.setOption(komponengraph);
+            console.log(echartLine);
+          }
+        });
+      } else if (elem.selectgraph == 'tahunan') {
+        elem.$http.post('{{ URL::to('admin-grafik-data') }}', { optselected : elem.selectgraph, yearselected : elem.tahun, lastyear : elem.tahunakhir, _token: '{!! csrf_token() !!}' }).then(function(response){
+          if (response.body.length > 0 && elem.selectgraph == 'tahunan') {
+            komponengraph.title.text = 'Grafik Tahunan';
+            komponengraph.title.subtext = elem.tahun +' sampai '+ elem.tahunakhir;
+            var jsonObj = $.parseJSON(response.body);
+            komponengraph.xAxis[0].data = jsonObj.xaxixtitle;
+            komponengraph.series[0].data = jsonObj.beritacount;
+            komponengraph.series[1].data = jsonObj.komentarcount;
+            echartLine = echarts.init(document.getElementById('echart_line'), theme);
+            echartLine.setOption(komponengraph);
+          }
+        });
+      }
+    },
+    showgrafikmonthly: function() {
+      this.selectgraph = 'bulanan';
+      this.loadgrafik();
+    },
+    showgrafikyearly: function() {
+      this.selectgraph = 'tahunan';
+      this.loadgrafik();
+    }
+  }
+});
+
+$('#bulanselect').on('ifClicked',function(e){
+  vm.showgrafikmonthly();
+});
+$('#tahunselect').on('ifClicked',function(e){
+  vm.showgrafikyearly();
+});
+
+
 vm.loadgrafik();
 </script>
 @endsection

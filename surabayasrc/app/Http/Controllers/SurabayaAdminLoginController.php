@@ -354,7 +354,7 @@ class SurabayaAdminLoginController extends MasterController
       $tbadminpesan->userid = $id;
       $tbadminpesan->save();
 
-      if (!is_null(Auth::user()->email) && !empty(Auth::user()->email) &&  filter_var( Auth::user()->email, FILTER_VALIDATE_EMAIL)) {
+      if (env('kirimemail') == 1 && !is_null(Auth::user()->email) && !empty(Auth::user()->email) &&  filter_var( Auth::user()->email, FILTER_VALIDATE_EMAIL)) {
         $usersend = User::find($id);
         $dataemail = ['judul' => $request->judul, 'toemail' => $usersend->email];
         @Mail::send('emailku', ['pesan' => $request->pesan], function ($message) use ($dataemail) {
@@ -374,6 +374,7 @@ class SurabayaAdminLoginController extends MasterController
     }
     $minyear = date('Y');
     $maxyear = date('Y');
+    $yearnow = date('Y');
 
     $datayear = TbBerita::select(DB::RAW('max(year(updated_at)) as maxyear'))->first();
     if (!is_null($datayear) && !empty($datayear)) {
@@ -397,6 +398,85 @@ class SurabayaAdminLoginController extends MasterController
       ,'minyear' => $minyear
       ,'maxyear' => $maxyear
       ,'optionyear' => $optionyear
+      ,'yearnow' => $yearnow
+      ,'totaluser' => number_format(User::count(), 0, ',','.')
+      ,'totalberita' => number_format(TbBerita::count(), 0, ',','.')
+      ,'totalkomentar' => number_format(TbKomentar::count(), 0, ',','.')
     ]);
+  }
+  public function grafikdata(Request $request) {
+    $optselected = $request->optselected;
+    $yearselected = $request->yearselected;
+    if ($request->monthselected) {
+      $monthselected = (strlen(''.$request->monthselected) < 2 ? '0' : '').$request->monthselected;
+    }
+    if ($request->lastyear) {
+      $lastyear = $request->lastyear;
+    }
+    if ($optselected == 'bulanan') {
+      $xaxixtitle = [];
+      $beritacount = [];
+      $komentarcount = [];
+      $daycount = cal_days_in_month (CAL_GREGORIAN, $monthselected,$yearselected);
+      for ($i = 1; $i <= $daycount; $i++) {
+        $label = ''.(strlen(''.$i) < 2 ? '0' : '').$i;
+        $xaxixtitle[] = $label;
+        $beritacount[] = 0;
+        $komentarcount[] = 0;
+      }
+      $beritaqry = TbBerita::select(DB::RAW('date_format(updated_at, \'%d\') as day'), DB::RAW('count(*) as total'))->groupBy(DB::RAW('date_format(updated_at, \'%d\')'))
+      ->where(DB::RAW('date_format(updated_at, \'%m\')'), '=', $monthselected)
+      ->where(DB::RAW('date_format(updated_at, \'%Y\')'), '=', $yearselected)
+      ->get();
+      if (!is_null($beritaqry) && !empty($beritaqry)) {
+        foreach ($beritaqry as $beritarow) {
+          $i = intval($beritarow->day);
+          $beritacount[$i] = $beritarow->total;
+        }
+      }
+      $komentarqry = TbKomentar::select(DB::RAW('date_format(updated_at, \'%d\') as day'), DB::RAW('count(*) as total'))->groupBy(DB::RAW('date_format(updated_at, \'%d\')'))
+      ->where(DB::RAW('date_format(updated_at, \'%m\')'), '=', $monthselected)
+      ->where(DB::RAW('date_format(updated_at, \'%Y\')'), '=', $yearselected)
+      ->get();
+      if (!is_null($komentarqry) && !empty($komentarqry)) {
+        foreach ($komentarqry as $komentarrow) {
+          $i = intval($komentarrow->day);
+          $komentarcount[$i] = $komentarrow->total;
+        }
+      }
+      return ['xaxixtitle' => $xaxixtitle, 'beritacount' => $beritacount, 'komentarcount' => $komentarcount];
+    } elseif ($optselected == 'tahunan') {
+      $xaxixtitle = [];
+      $beritacount = [];
+      $komentarcount = [];
+      for ($i = $yearselected; $i <= $lastyear; $i++) {
+        $xaxixtitle[] = ''.$i;
+        $beritacount[] = 0;
+        $komentarcount[] = 0;
+      }
+      $beritaqry = TbBerita::select(DB::RAW('date_format(updated_at, \'%Y\') as year'), DB::RAW('count(*) as total'))->groupBy(DB::RAW('date_format(updated_at, \'%Y\')'))
+      ->whereBetween(DB::RAW('date_format(updated_at, \'%Y\')'), [$yearselected, $lastyear])
+      ->get();
+      if (!is_null($beritaqry) && !empty($beritaqry)) {
+        foreach ($beritaqry as $beritarow) {
+          $i = intval($beritarow->year);
+          $beritacount[array_search($i, $xaxixtitle)] = $beritarow->total;
+        }
+      }
+      $komentarqry = TbKomentar::select(DB::RAW('date_format(updated_at, \'%Y\') as year'), DB::RAW('count(*) as total'))->groupBy(DB::RAW('date_format(updated_at, \'%Y\')'))
+      ->whereBetween(DB::RAW('date_format(updated_at, \'%Y\')'), [$yearselected, $lastyear])
+      ->get();
+      if (!is_null($komentarqry) && !empty($komentarqry)) {
+        foreach ($komentarqry as $komentarrow) {
+          $i = intval($komentarrow->year);
+          $komentarcount[array_search($i, $xaxixtitle)] = $komentarrow->total;
+        }
+      }
+      return ['xaxixtitle' => $xaxixtitle, 'beritacount' => $beritacount, 'komentarcount' => $komentarcount];
+    }
+    return 1;
+  }
+  public function broadcastmessage() {
+    return view('admin.pesanbroadcast');
   }
 }

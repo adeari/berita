@@ -309,6 +309,7 @@ vm = new Vue({
     },
     showkirimpesan: function() {
       this.showlayoutpesan = true;
+      this.showalertpesanterkirim = false;
       this.judulpesan = '';
       this.pesanpesan = '';
     },

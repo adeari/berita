@@ -1,1 +1,1 @@
-ddddddeee {{ $pesan }}
+{{ $pesan }}

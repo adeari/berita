@@ -16,7 +16,7 @@ class SurabayaAwalController extends MasterController
     public function index() {
       if (Auth::check()) {
 	if (auth::user()->isadmin) {
-	  return redirect('admin-berita');
+	  return redirect('admin-grafik');
 	}
       }
     	return redirect('populer');
