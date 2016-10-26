@@ -16,6 +16,10 @@ class SurabayaUserLoginController extends MasterController
   public function __construct()
   {
     $this->middleware('auth');
+    if (Auth::user()->isadmin) {
+			echo 0;
+			exit;
+		}
     $this->commonactionn();
   }
   public function beritaadd(Request $request) {

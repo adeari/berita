@@ -10,7 +10,7 @@
               </div>
             </div>
             <div class="clearfix"></div>
-            
+
             <div class="row">
               <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
@@ -56,12 +56,12 @@
   <svg class="loader loader-8">
     <circle cx="75" cy="75" r="60" fill="transparent" stroke="#AAEA33" stroke-width="6" stroke-linecap="round" stroke-dasharray="385" stroke-dashoffset="385" filter="url(#blur)"></circle>
   </svg>
-</div>                      
+</div>
                       <div class="ln_solid"></div>
                       <div class="form-group" v-show="simpanbuttonshow">
                         <div class="col-md-6 col-md-offset-3">
                         <button id="send" type="submit" class="btn btn-success">Login</button>
-@if ($viewdaftar)                        
+@if ($viewdaftar)
                         <a href="{{ URL::to('daftar') }}" class="btn btn-warning">Daftar</a>
 @endif
                         </div>
@@ -88,7 +88,7 @@ var vue = new Vue({
     methods:{
 	    onsubmit: function(evue) {
 	      elem = this;
-	      
+
 	      if (validator.checkAll($('#formdata'))) {
 	      validator.unmark( $('#usernamenik'));
 	      validator.unmark( $('#password'));
@@ -99,12 +99,15 @@ var vue = new Vue({
 		  oData.append('password', elem.password);
 		  oData.append('_token', '{!! csrf_token() !!}');
 		  elem.$http.post('{{ URL::to('ceklogin') }}',oData).then(function(response){
-		    if (response.body == 1) {
-		      location = '/';
-		    } else {
-		      validator.mark( $('#usernamenik'), 'Tidak sesuai');
-		      validator.mark( $('#password'), 'Tidak sesuai');
-		    }
+        if (response.body.length > 0) {
+          var jsonObj = $.parseJSON(response.body);
+  		    if (jsonObj.success == 1) {
+  		      location = '/';
+  		    } else {
+  		      validator.mark( $('#usernamenik'), jsonObj.msg);
+  		      validator.mark( $('#password'), jsonObj.msg);
+  		    }
+        }
 		    elem.simpanbuttonshow = true;
 		    elem.loadingshow = false;
 		  });

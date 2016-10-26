@@ -367,4 +367,36 @@ class SurabayaAdminLoginController extends MasterController
       return 2;
     }
   }
+  public function grafik() {
+    $month = date('m');
+    if (strlen($month) < 2) {
+      $month = '0'.$month;
+    }
+    $minyear = date('Y');
+    $maxyear = date('Y');
+
+    $datayear = TbBerita::select(DB::RAW('max(year(updated_at)) as maxyear'))->first();
+    if (!is_null($datayear) && !empty($datayear)) {
+      $maxyear = $datayear->maxyear;
+    }
+
+    $datayear = TbBerita::select(DB::RAW('min(year(updated_at)) as minyear'))->first();
+    if (!is_null($datayear) && !empty($datayear)) {
+      $minyear = $datayear->minyear;
+    }
+
+    $optionyear = [];
+    $i = $minyear;
+    while ($i <= $maxyear) {
+      $optionyear[$i] = $i;
+      $i++;
+    }
+
+    return view('admin.grafik', [
+      'month' => $month
+      ,'minyear' => $minyear
+      ,'maxyear' => $maxyear
+      ,'optionyear' => $optionyear
+    ]);
+  }
 }

@@ -12,6 +12,19 @@ use DB;
 
 class AndroidController extends MasterController
 {
+  private function ceklogin(Request $request) {
+    $canlogin = 0;
+    if (Auth::attempt(array('username' => $request->usernamenik, 'password' => $request->password))) {
+      $canlogin = 1;
+    } else if (Auth::attempt(array('nik' => $request->usernamenik, 'password' => $request->password))) {
+      $canlogin = 1;
+    }
+    if ($canlogin && Auth::user()->aktif) {
+      return $canlogin;
+    }
+    return 0;
+  }
+
   public function beritaadd1(Request $request) {
     if ($this->ceklogin($request) == 1) {
       $this->commonactionn();

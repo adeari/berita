@@ -105,7 +105,21 @@ class SurabayaAwalController extends MasterController
 	  return $this->mendaftar($request);
 	}
   public function cekloginweb(Request $request) {
-    return $this->ceklogin($request);
+    $msg = ['success' => 0, 'msg' => 'Tidak sesuai'];
+    $canlogin = 0;
+    if (Auth::attempt(array('username' => $request->usernamenik, 'password' => $request->password))) {
+      $canlogin = 1;
+    } else if (Auth::attempt(array('nik' => $request->usernamenik, 'password' => $request->password))) {
+      $canlogin = 1;
+    }
+    if ($canlogin) {
+      if (Auth::user()->aktif) {
+        $msg = ['success' => 1, 'msg' => ''];
+      } else {
+        $msg = ['success' => 0, 'msg' => 'User Di Blokir'];
+      }
+    }
+    return $msg;
   }
   public function logout() {
     Auth::logout();

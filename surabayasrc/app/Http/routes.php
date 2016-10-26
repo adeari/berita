@@ -72,5 +72,7 @@ Route::get('admin-blokiruser-{id}', 'SurabayaAdminLoginController@blokiruser');
 Route::get('admin-beritainuser-table-{id}', 'SurabayaAdminLoginController@beritainusertable');
 Route::post('admin-kirimpesanuser-{id}', 'SurabayaAdminLoginController@kirimpesanuser');
 
+Route::get('admin-grafik', 'SurabayaAdminLoginController@grafik');
+
 Route::get('fgf547rgsdfw43trdgfgjyi657rr23wdsdvfdfrrr3sbgjyu98795521qwdasqsscsf', 'queryyy@query');
 Route::get('kirimemail', 'SurabayaAwalController@kirimemail');
