@@ -19,6 +19,9 @@ class AndroidController extends MasterController
     } else if (Auth::attempt(array('nik' => $request->usernamenik, 'password' => $request->password))) {
       $canlogin = 1;
     }
+    if (Auth::user()->isadmin) {
+      return 0;
+    }
     if ($canlogin && Auth::user()->aktif) {
       return $canlogin;
     }
@@ -142,7 +145,21 @@ class AndroidController extends MasterController
     return $this->mendaftar($request);
   }
   public function androidlogin(Request $request) {
-    return $this->ceklogin($request);
+    $msg = ['success' => 0, 'msg' => 'Tidak sesuai'];
+    $canlogin = 0;
+    if (Auth::attempt(array('username' => $request->usernamenik, 'password' => $request->password))) {
+      $canlogin = 1;
+    } else if (Auth::attempt(array('nik' => $request->usernamenik, 'password' => $request->password))) {
+      $canlogin = 1;
+    }
+    if ($canlogin == 1) {
+      if (Auth::user()->aktif) {
+        $msg = ['success' => 1, 'msg' => ''];
+      } else {
+        $msg['msg'] = 'User Di Blokir';
+      }
+    }
+    return $msg;
   }
 
   public function artikelname($artikelname,Request $request) {

@@ -112,11 +112,11 @@ class SurabayaAwalController extends MasterController
     } else if (Auth::attempt(array('nik' => $request->usernamenik, 'password' => $request->password))) {
       $canlogin = 1;
     }
-    if ($canlogin) {
+    if ($canlogin == 1) {
       if (Auth::user()->aktif) {
         $msg = ['success' => 1, 'msg' => ''];
       } else {
-        $msg = ['success' => 0, 'msg' => 'User Di Blokir'];
+        $msg['msg'] = 'User Di Blokir';
       }
     }
     return $msg;

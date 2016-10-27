@@ -66,14 +66,7 @@ class MasterController extends BaseController
 	  }
 	  return $return;
 	}
-  public function ceklogin(Request $request) {
-    if (Auth::attempt(array('username' => $request->usernamenik, 'password' => $request->password))) {
-      return 1;
-    } else if (Auth::attempt(array('nik' => $request->usernamenik, 'password' => $request->password))) {
-      return 1;
-    }
-    return 0;
-  }
+
   public function commonactionn() {
       if (Auth::check()) {
 	User::where('id', '=', Auth::user()->id)->update(['lastlogin' => DB::raw('NOW()')]);
