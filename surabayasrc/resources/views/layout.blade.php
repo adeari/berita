@@ -35,6 +35,7 @@
       <ul class="nav child_menu">
 	  <li><a href="berita-saya"><i class="fa fa-newspaper-o"></i> Berita Saya</a></li>
 	  <li><a href="berita-add"><i class="fa fa-plus"></i> Tambah berita</a></li>
+	  <li><a href="pesan"><i class="fa fa-envelope-o"></i> Pesan</a></li>
 	  <li><a href="saya"><i class="fa fa-user"></i> Saya</a></li>
 	  <li><a href="{{ URL::to('logout') }}"><i class="fa fa-sign-out"></i> Logout</a>
       </ul>
@@ -58,7 +59,12 @@
                       	<li v-bind:class="{ 'current-page': androidpage }"><a href="{{ URL::to('androidpage') }}"><i class="fa fa-android"></i> Android</a></li>
                     </ul>
                 </li>
-
+                <li v-bind:class="{ 'active': isservice }"><a><i class="fa fa-info"></i> Info Kami <span class="fa fa-chevron-down"></span></a>
+                <ul class="nav child_menu" v-bind:style="artikelstyle">
+                        <li v-bind:class="{ 'current-page': alamat-kami }"><a href="{{ URL::to('alamat-kami') }}"><i class="fa fa-building"></i> Alamat Kami</a></li>
+                        <li v-bind:class="{ 'current-page': hubungi-kami }"><a href="{{ URL::to('hubungi-kami') }}"><i class="fa fa-phone"></i> Hubungi Kami</a></li>
+                    </ul>
+                </li>
                 </ul>
             </div>
             <!-- /sidebar menu -->

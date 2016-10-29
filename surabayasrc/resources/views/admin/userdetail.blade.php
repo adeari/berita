@@ -28,7 +28,6 @@
                 </ul>
               </li>
               </ul>
-
             </div>
             <div class="clearfix"></div>
 <div class="row" v-show="showalertpesanterkirim"><div class="col-md-12"><div class="x_panel text-center"><h2>Pesan terkirim <span class="text-right red pointer" style="font-weight:bold;" @click="closepesanterkirim">X</span></h2></div></div></div>

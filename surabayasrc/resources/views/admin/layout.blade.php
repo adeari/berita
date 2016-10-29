@@ -42,6 +42,11 @@
                   </ul>
                 </li>
 
+                <li v-bind:class="{ 'active': iasadminmenu }"><a><i class="fa fa-university"></i> Admin menu <span class="fa fa-chevron-down"></span></a>
+                <ul class="nav child_menu" v-bind:style="beritastyle">
+                <li v-bind:class="{ 'current-page': admin-ganti-password }"><a href="{{ URL::to('admin-ganti-password') }}"><i class="fa fa-check"></i> Ganti Password</a></li>
+                    </ul>
+                  </li>
 
                 </ul>
             </div>

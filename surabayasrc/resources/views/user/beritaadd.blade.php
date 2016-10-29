@@ -104,7 +104,7 @@
                       <a class="btn" data-edit="redo" title="Redo (Ctrl/Cmd+Y)"><i class="fa fa-repeat"></i></a>
                     </div>
                   </div>
-                  <div id="editor" class="editor-wrapper">{{ (is_null($beritaedit) ? '' : $beritaedit->deskripsi) }}</div>
+                  <div id="editor" class="editor-wrapper">{!! (is_null($beritaedit) ? '' : $beritaedit->deskripsi) !!}</div>
                   {!! Form::textarea('descr', (is_null($beritaedit) ? '' : $beritaedit->deskripsi),['id' => 'descr', 'style' => 'display:none;'])  !!}
                   <br />
                   <div class="ln_solid"></div>
@@ -167,7 +167,7 @@
       $('.multi.required').on('keyup blur', 'input', function() {
         validator.checkField.apply($(this).siblings().last()[0]);
       });
-      
+
       function initToolbarBootstrapBindings() {
           var fonts = ['Serif', 'Sans', 'Arial', 'Arial Black', 'Courier',
               'Courier New', 'Comic Sans MS', 'Helvetica', 'Impact', 'Lucida Grande', 'Lucida Sans', 'Tahoma', 'Times',
@@ -241,6 +241,7 @@
 	    },
 	    methods:{
 		    onchangeimage: function(evue) {
+          validator.unmark( $('#imageberita'));
 			    thefile = evue.target.files[0];
 			    if (thefile.size < 2000000) {
 			      var readImg = new FileReader();
@@ -249,7 +250,6 @@
 				      $('#imagepict').attr('src',e.target.result);
 			      }
 			      this.imageberitashow = true;
-			      validator.unmark( $('#imageberita'));
 			      this.hapusimage = '';
 			      this.viewhhapusbutton = true;
 			      this.saveimage = true;

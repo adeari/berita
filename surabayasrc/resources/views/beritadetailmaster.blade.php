@@ -147,7 +147,7 @@ function share() {
     </div>
      <div class="form-group">
 	<div class="col-md-6 col-md-offset-3">
-	  <button id="send" type="submit">Simpan</button>
+    {{ Form::submit('Simpan', array('class' => 'btn btn-success', '@click' => 'batalralat(komentar)', 'id' => 'send')) }}
 	  {{ Form::button('Batal', array('class' => 'btn btn-warning', '@click' => 'batalralat(komentar)', 'type' => 'button')) }}
 	</div>
       </div>

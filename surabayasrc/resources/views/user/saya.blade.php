@@ -173,9 +173,10 @@ vueprofile = new Vue({
   },
   methods:{
     changeprofile:function() {
-      if (this.cpassword != this.repassword) {
-	validator.mark( $('#repassword'), 'Samakan Password');
-      } else if (cansave) {
+      validator.unmark( $('#email'));
+      validator.unmark( $('#nik'));
+      validator.unmark( $('#repassword'));
+      if (cansave) {
 	cansave = false;
 	elem = this;
 	elem.loadingshow = true;
@@ -189,10 +190,17 @@ vueprofile = new Vue({
 	  oData.append('gambar', form.files[0]);
 	}
 	elem.$http.post('{{ URL::to('changeprofile') }}', oData).then(function(response){
-	  $('#profileimage').val('');
-	  elem.loadingshow = false;
-	  elem.alert = true;
-	  cansave = true;
+    if (response.body.length > 0) {
+      jsonObj = JSON.parse(response.body);
+      if (jsonObj.success == 1) {
+    	  elem.alert = true;
+        $('#profileimage').val('');
+      } else {
+        validator.mark( $('#'+jsonObj.element), jsonObj.msg);
+      }
+    }
+    elem.loadingshow = false;
+    cansave = true;
 	});
       }
     },

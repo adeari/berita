@@ -10,14 +10,17 @@ use DB;
 use App\User;
 use App\tables\TbLokasi;
 use App\tables\TbKomentar;
+use App\tables\TbPesanCustomer;
 
 class SurabayaAwalController extends MasterController
 {
     public function index() {
       if (Auth::check()) {
-	if (auth::user()->isadmin) {
-	  return redirect('admin-grafik');
-	}
+      	if (auth::user()->isadmin) {
+      	  return redirect('admin-grafik');
+      	} else {
+          return redirect('pesan');
+        }
       }
     	return redirect('populer');
     }
@@ -166,6 +169,30 @@ class SurabayaAwalController extends MasterController
   }
   public function addshareberita($id) {
     TbBerita::where('id', '=', $id)->update(['jumlah_share' => DB::raw('jumlah_share + 1')]);
+    return 1;
+  }
+  public function alamatkami() {
+    return view ('alamatkami');
+  }
+  public function hubungikami() {
+    return view ('hubungikami');
+  }
+  public function kirimpesansekarang(Request $request) {
+    $tbpesancustomer = new TbPesanCustomer();
+    $tbpesancustomer->judul = $request->judul;
+    $tbpesancustomer->pesan = $request->pesan;
+    $tbpesancustomer->emailcustomer = $request->email;
+    $tbpesancustomer->save();
+
+    if (env('kirimemail') == 1 && !empty(Auth::user()->email) &&  filter_var( $request->email, FILTER_VALIDATE_EMAIL)) {
+      $usersend = User::find($id);
+      $dataemail = ['judul' => '[Info WEB] '.$request->judul, 'dariemail' => $request->email];
+      Mail::send('emailku', ['pesan' => $request->pesan], function ($message) use ($dataemail) {
+          $message->from($dataemail['dariemail']);
+          $message->to('cs@surabayadigitalcity.net');
+          $message->subject($dataemail['judul']);
+      });
+    }
     return 1;
   }
 }

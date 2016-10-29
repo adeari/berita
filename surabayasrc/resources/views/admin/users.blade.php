@@ -65,7 +65,7 @@
 	      <th class="column-title" style="text-align:right;">Jml. Berita</th>
 	      <th class="column-title" style="text-align:right;">Jml. Komentar</th>
 	      <th class="column-title" style="text-align:right;">Jml. Share</th>
-	      <th class="bulk-actions" colspan="7">
+	      <th class="bulk-actions" colspan="9">
 		<li role="presentation" class="dropdown" style="list-style-type: none;">
                   <a class="dropdown-toggle info-number antoo" href="" class="" data-toggle="dropdown" aria-expanded="false" style="color:#fff; font-weight:500;">Tindakan ( <span class="action-cnt"> </span> ) <i class="fa fa-chevron-down"></i></a>
                   <ul class="dropdown-menu dropdown-usermenu">

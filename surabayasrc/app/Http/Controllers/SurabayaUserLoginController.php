@@ -5,6 +5,8 @@ use Illuminate\Http\Request;
 
 use App\tables\TbBerita;
 use App\tables\TbKomentar;
+use App\tables\TbBroadcastPesan;
+use App\tables\TbAdminPesan;
 
 use DB;
 use URL;
@@ -168,6 +170,17 @@ class SurabayaUserLoginController extends MasterController
     $this->gantipassword($request);
   }
   public function changeprofile(Request $request) {
+    if (!empty($request->email)) {
+      if (User::where('email', '=', $request->email)->where('id', '!=', Auth::user()->id)->count() > 0) {
+        return ['sucess' => 0, 'msg' => 'Email sudah dipakai user lain', 'element' => 'email'];
+      }
+    }
+    if (!empty($request->nik)) {
+      if (User::where('nik', '=', $request->nik)->where('id', '!=', Auth::user()->id)->count() > 0) {
+        return ['sucess' => 0, 'msg' => 'NIK sudah dipakai user lain', 'element' => 'nik'];
+      }
+    }
+
     $return = $this->uploadfile();
     if ($return['success'] == '1') {
       $request->gambar = (is_null($return['filename']) ? '' : $return['filename']);
@@ -253,6 +266,22 @@ class SurabayaUserLoginController extends MasterController
   }
   public function addshareberitauser() {
     User::where('id', '=', Auth::user()->id)->update(['jumlah_share' => DB::raw('jumlah_share + 1')]);
+    return 1;
+  }
+  public function pesan() {
+    $datapesan = TbAdminPesan::where('userid', '=', Auth::user()->id)->get();
+    $pesansaya = '';
+    foreach ($datapesan as $pesanrow) {
+      if (strlen($pesansaya) > 0) $pesansaya .=',';
+      $pesansaya .= '{id:'.$pesanrow->id.',judul:\''.$pesanrow->judul.'\', pesan:\''.$pesanrow->pesan.'\'}';
+    }
+
+    return view('user.pesan', ['pesan' => TbBroadcastPesan::first()->pesan
+      ,'pesansaya' => $pesansaya
+    ]);
+  }
+  public function hapuspesan($id) {
+    TbAdminPesan::find($id)->delete();
     return 1;
   }
 }

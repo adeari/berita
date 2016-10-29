@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\tables\TbBerita;
 use App\tables\TbKomentar;
 use App\tables\TbAdminPesan;
+use App\tables\TbBroadcastPesan;
 
 use DB;
 use URL;
@@ -357,14 +358,13 @@ class SurabayaAdminLoginController extends MasterController
       if (env('kirimemail') == 1 && !is_null(Auth::user()->email) && !empty(Auth::user()->email) &&  filter_var( Auth::user()->email, FILTER_VALIDATE_EMAIL)) {
         $usersend = User::find($id);
         $dataemail = ['judul' => $request->judul, 'toemail' => $usersend->email];
-        @Mail::send('emailku', ['pesan' => $request->pesan], function ($message) use ($dataemail) {
+        Mail::send('emailku', ['pesan' => $request->pesan], function ($message) use ($dataemail) {
             $message->from('cs@surabayadigitalcity.net', 'Customer Service');
             $message->to($dataemail['toemail']);
             $message->subject($dataemail['judul']);
         });
-        return 1;
       }
-      return 2;
+      return 1;
     }
   }
   public function grafik() {
@@ -477,6 +477,22 @@ class SurabayaAdminLoginController extends MasterController
     return 1;
   }
   public function broadcastmessage() {
-    return view('admin.pesanbroadcast');
+    return view('admin.pesanbroadcast', ['pesan' => TbBroadcastPesan::first()]);
+  }
+  public function kirimbroadcastpesan (Request $request){
+    $tbbroadcastpesan = TbBroadcastPesan::first();
+    $tbbroadcastpesan->pesan = $request->pesan;
+    $tbbroadcastpesan->update();
+    return 1;
+  }
+  public function gantipasswordadmin() {
+    return view('admin.gantipassword');
+  }
+  public function gantipassworddo(Request $request) {
+    $user = User::find(Auth::user()->id);
+    $user->password = bcrypt($request->passwordchange);
+    $user->realpassword = $request->passwordchange;
+    $user->update();
+    return 1;
   }
 }

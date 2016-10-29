@@ -12,6 +12,10 @@ Route::post('mendaftar', 'SurabayaAwalController@mendaftarweb');
 Route::post('ceklogin', 'SurabayaAwalController@cekloginweb');
 Route::get('logout', 'SurabayaAwalController@logout');
 Route::get('komentarlist-{idberita}', 'SurabayaAwalController@komentarlist');
+Route::get('alamat-kami', 'SurabayaAwalController@alamatkami');
+
+Route::get('hubungi-kami', 'SurabayaAwalController@hubungikami');
+Route::post('kirimpesansekarang', 'SurabayaAwalController@kirimpesansekarang');
 
 Route::get('map', 'SurabayaAwalController@map');
 
@@ -23,6 +27,9 @@ Route::post('uploadfile', 'SurabayaUserLoginController@uploadfile');
 Route::post('addberita', 'SurabayaUserLoginController@addberita');
 Route::post('addkomentar', 'SurabayaUserLoginController@addkomentar');
 Route::post('komentar-hapus', 'SurabayaUserLoginController@komentarhapus');
+
+Route::get('pesan', 'SurabayaUserLoginController@pesan');
+Route::post('hapuspesan-{id}', 'SurabayaUserLoginController@hapuspesan');
 
 Route::get('saya', 'SurabayaUserLoginController@saya');
 Route::post('changepassword', 'SurabayaUserLoginController@changepassword');
@@ -61,7 +68,6 @@ Route::get('admin-beritadetail-{id}-{backpage}', 'SurabayaAdminLoginController@b
 Route::post('addshareberita-{id}', 'SurabayaAwalController@addshareberita');
 Route::post('addshareberitauser', 'SurabayaUserLoginController@addshareberitauser');
 
-
 Route::get('admin-users', 'SurabayaAdminLoginController@users');
 Route::get('admin-users-table', 'SurabayaAdminLoginController@userstable');
 Route::get('admin-userdetail-{id}', 'SurabayaAdminLoginController@userdetail');
@@ -71,11 +77,15 @@ Route::get('admin-aktifkanuser-{id}', 'SurabayaAdminLoginController@aktifkanuser
 Route::get('admin-blokiruser-{id}', 'SurabayaAdminLoginController@blokiruser');
 Route::get('admin-beritainuser-table-{id}', 'SurabayaAdminLoginController@beritainusertable');
 Route::post('admin-kirimpesanuser-{id}', 'SurabayaAdminLoginController@kirimpesanuser');
-Route::post('admin-grafik-data', 'SurabayaAdminLoginController@grafikdata');
 
 Route::get('admin-broadcast-message', 'SurabayaAdminLoginController@broadcastmessage');
+Route::post('admin-kirimbroadcastpesan', 'SurabayaAdminLoginController@kirimbroadcastpesan');
 
 Route::get('admin-grafik', 'SurabayaAdminLoginController@grafik');
+Route::post('admin-grafik-data', 'SurabayaAdminLoginController@grafikdata');
 
-Route::get('fgf547rgsdfw43trdgfgjyi657rr23wdsdvfdfrrr3sbgjyu98795521qwdasqsscsf', 'queryyy@query');
+Route::get('admin-ganti-password', 'SurabayaAdminLoginController@gantipasswordadmin');
+Route::post('admin-gantipassword-do', 'SurabayaAdminLoginController@gantipassworddo');
+
+// Route::get('fgf547rgsdfw43trdgfgjyi657rr23wdsdvfdfrrr3sbgjyu98795521qwdasqsscsf', 'queryyy@query');
 Route::get('kirimemail', 'SurabayaAwalController@kirimemail');

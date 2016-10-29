@@ -6,7 +6,8 @@
           <div class="">
             <div class="page-title">
               <div class="title_left">
-                <h3><i class="fa fa-area-chart"></i> Mengirim Pesan KE Smua User <small>Pesan akan tampil di halaman Awal Setelah user Login</small></h3>
+                <h3><i class="fa fa-envelope-o"></i> Mengirim Pesan ke semua User</h3>
+                <h3><small>Pesan akan tampil di halaman Awal Setelah user Login</small></h3>
               </div>
             </div>
             <div class="clearfix"></div>
@@ -14,7 +15,8 @@
 <div class="row"><div class="col-md-12 col-sm-12 col-xs-12">
 	<div class="x_panel">
     <div class="x_content">
-		{!! Form::open(['class' => 'form-horizontal form-label-left', '@submit.prevent' => "loadusers"])  !!}
+      <div class="row" v-show="showalertpesanterkirim"><div class="col-md-12"><div class="x_panel text-center"><h2>Pesan terkirim <span class="text-right red pointer" style="font-weight:bold;" @click="closepesanterkirim">X</span></h2></div></div></div>
+		{!! Form::open(['class' => 'form-horizontal form-label-left', '@submit.prevent' => "kirim"])  !!}
     <div id="alerts"></div>
     <div class="btn-toolbar editor" data-role="editor-toolbar" data-target="#editor">
       <div class="btn-group">
@@ -79,14 +81,47 @@
         <a class="btn" data-edit="redo" title="Redo (Ctrl/Cmd+Y)"><i class="fa fa-repeat"></i></a>
       </div>
     </div>
-    <div id="editor" class="editor-wrapper">isinyaaaa</div>
-      {!! Form::textarea('descr', 'isinyaaa',['id' => 'descr', 'style' => 'display:none;'])  !!}
+    <div id="editor" class="editor-wrapper">{!! $pesan->pesan !!}</div>
+      {!! Form::textarea('descr', $pesan->pesan,['id' => 'descr', 'style' => 'display:none;'])  !!}
+      <div class="row loadernaikup" v-show="loadingshowpesan">
+      <div class="demo">
+        <svg class="loader">
+          <filter id="blur">
+            <fegaussianblur in="SourceGraphic" stddeviation="2"></fegaussianblur>
+          </filter>
+          <circle cx="75" cy="75" r="60" fill="transparent" stroke="#F4F519" stroke-width="6" stroke-linecap="round" stroke-dasharray="385" stroke-dashoffset="385" filter="url(#blur)"></circle>
+        </svg>
+        <svg class="loader loader-2">
+          <circle cx="75" cy="75" r="60" fill="transparent" stroke="#DE2FFF" stroke-width="6" stroke-linecap="round" stroke-dasharray="385" stroke-dashoffset="385" filter="url(#blur)"></circle>
+        </svg>
+        <svg class="loader loader-3">
+          <circle cx="75" cy="75" r="60" fill="transparent" stroke="#FF5932" stroke-width="6" stroke-linecap="round" stroke-dasharray="385" stroke-dashoffset="385" filter="url(#blur)"></circle>
+        </svg>
+        <svg class="loader loader-4">
+          <circle cx="75" cy="75" r="60" fill="transparent" stroke="#E97E42" stroke-width="6" stroke-linecap="round" stroke-dasharray="385" stroke-dashoffset="385" filter="url(#blur)"></circle>
+        </svg>
+        <svg class="loader loader-5">
+          <circle cx="75" cy="75" r="60" fill="transparent" stroke="white" stroke-width="6" stroke-linecap="round" filter="url(#blur)"></circle>
+        </svg>
+        <svg class="loader loader-6">
+          <circle cx="75" cy="75" r="60" fill="transparent" stroke="#00DCA3" stroke-width="6" stroke-linecap="round" stroke-dasharray="385" stroke-dashoffset="385" filter="url(#blur)"></circle>
+        </svg>
+        <svg class="loader loader-7">
+          <circle cx="75" cy="75" r="60" fill="transparent" stroke="purple" stroke-width="6" stroke-linecap="round" stroke-dasharray="385" stroke-dashoffset="385" filter="url(#blur)"></circle>
+        </svg>
+        <svg class="loader loader-8">
+          <circle cx="75" cy="75" r="60" fill="transparent" stroke="#AAEA33" stroke-width="6" stroke-linecap="round" stroke-dasharray="385" stroke-dashoffset="385" filter="url(#blur)"></circle>
+        </svg>
+      </div></div>
     <br />
     <div class="ln_solid"></div>
+    {{ Form::submit('Kirim', array('class' => 'btn btn-lg btn-success', 'v-show' => '!loadingshowpesan')) }}
 		{!! Form::close() !!}
 		</div>
 	</div>
-</div></div>
+</div>
+
+</div>
 
     </div>
 </div>
@@ -151,14 +186,30 @@ function initToolbarBootstrapBindings() {
   window.prettyPrint;
   prettyPrint();
 
-
 canajaxprocess = true;
 vm = new Vue({
   el:'#pagevue',
   data: {
     firsttime: true,
+    loadingshowpesan: false,
+    showalertpesanterkirim: false,
   },
   methods: {
+    closepesanterkirim: function() {
+      this.showalertpesanterkirim = false;
+    },
+    kirim: function() {
+      if (canajaxprocess) {
+        canajaxprocess = false;
+        elem = this;
+        elem.loadingshowpesan = true;
+        elem.$http.post('{{ URL::to('admin-kirimbroadcastpesan') }}' , {_token: '{!! csrf_token() !!}', pesan: $('#editor').html()}).then(function(response){
+          elem.loadingshowpesan =false;
+          elem.showalertpesanterkirim = true;
+          canajaxprocess = true;
+        });
+      }
+    }
   }
 });
 </script>
