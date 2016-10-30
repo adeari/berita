@@ -39,6 +39,7 @@
 		    <li v-bind:class="{ 'current-page': admin-users }"><a href="{{ URL::to('admin-users') }}"><i class="fa fa-user"></i> Users</a></li>
 		    <li v-bind:class="{ 'current-page': admin-grafik }"><a href="{{ URL::to('admin-grafik') }}"><i class="fa fa-area-chart"></i> Grafik</a></li>
 		    <li v-bind:class="{ 'current-page': admin-broadcast-message }"><a href="{{ URL::to('admin-broadcast-message') }}"><i class="fa fa-envelope-o"></i> Pesan Broadcast</a></li>
+		    <li v-bind:class="{ 'current-page': admin-pesan-user }"><a href="{{ URL::to('admin-pesan-user') }}"><i class="fa fa-envelope"></i> Pesan User</a></li>
                   </ul>
                 </li>
 

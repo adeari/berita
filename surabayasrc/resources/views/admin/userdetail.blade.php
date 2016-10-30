@@ -1,5 +1,5 @@
 @extends('admin.layout')
-@section('title', 'Surabaya Berita Populer')
+@section('title', 'Admin - SurabayaDigitalCity')
 @section('content')
         <!-- page content -->
         <div class="right_col" role="main" id="pagevue" style="display:none;" v-show="firsttime">

@@ -87,5 +87,9 @@ Route::post('admin-grafik-data', 'SurabayaAdminLoginController@grafikdata');
 Route::get('admin-ganti-password', 'SurabayaAdminLoginController@gantipasswordadmin');
 Route::post('admin-gantipassword-do', 'SurabayaAdminLoginController@gantipassworddo');
 
+Route::get('admin-pesan-user', 'SurabayaAdminLoginController@pesanuser');
+Route::get('admin-pesanuser-table', 'SurabayaAdminLoginController@pesanusertable');
+Route::post('admin-balaspesan', 'SurabayaAdminLoginController@balaspesan');
+
 // Route::get('fgf547rgsdfw43trdgfgjyi657rr23wdsdvfdfrrr3sbgjyu98795521qwdasqsscsf', 'queryyy@query');
 Route::get('kirimemail', 'SurabayaAwalController@kirimemail');

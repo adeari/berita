@@ -7,12 +7,12 @@ use App\tables\TbBerita;
 use App\tables\TbKomentar;
 use App\tables\TbAdminPesan;
 use App\tables\TbBroadcastPesan;
+use App\tables\TbPesanCustomer;
 
 use DB;
 use URL;
 use Auth;
 use App\User;
-use Mail;
 
 class SurabayaAdminLoginController extends MasterController
 {
@@ -357,12 +357,8 @@ class SurabayaAdminLoginController extends MasterController
 
       if (env('kirimemail') == 1 && !is_null(Auth::user()->email) && !empty(Auth::user()->email) &&  filter_var( Auth::user()->email, FILTER_VALIDATE_EMAIL)) {
         $usersend = User::find($id);
-        $dataemail = ['judul' => $request->judul, 'toemail' => $usersend->email];
-        Mail::send('emailku', ['pesan' => $request->pesan], function ($message) use ($dataemail) {
-            $message->from('cs@surabayadigitalcity.net', 'Customer Service');
-            $message->to($dataemail['toemail']);
-            $message->subject($dataemail['judul']);
-        });
+        $headers = 'From: cs@surabayadigitalcity.net' . "rn";
+        mail($usersend->email, '[SurabayaDigitalCity Info] '.$request->judul, $request->pesan, $headers);
       }
       return 1;
     }
@@ -494,5 +490,103 @@ class SurabayaAdminLoginController extends MasterController
     $user->realpassword = $request->passwordchange;
     $user->update();
     return 1;
+  }
+  public function pesanuser(Request $request) {
+    $tampilkan = 'Email Terbaru ke Lama';
+		$filter = '';
+		$pagego = 1;
+		$pencarian = '';
+		if ($request->session()->has('emailtablepage')) {
+      $fromsession = $request->session()->get('emailtablepage');
+
+			$pencarian = $fromsession->pencarian;
+			$pagego = $fromsession->pagego;
+			$filter = $fromsession->filter;
+			$tampilkan = $fromsession->tampilkan;
+		}
+
+    return view('admin.pesansuser', [
+			'tampilkan' => $tampilkan
+			,'filter' => $filter
+			,'pagego' => $pagego
+			,'pencarian' => $pencarian
+		]);
+  }
+  public function pesanusertable(Request $request){
+    $limit = 50;
+    $page = 0;
+    if ($request->pagego) {
+      $page = (intval($request->pagego) - 1) * $limit;
+    }
+
+		if ($request->tampilkan == 'Email Terbaru ke Lama') {
+			$qrydata = TbPesanCustomer::orderBy('created_at', 'desc');
+		} else if ($request->tampilkan == 'Email Lama ke Baru') {
+			$qrydata = TbPesanCustomer::orderBy('created_at', 'desc');
+		}
+
+		if ($request->filter == 'Belum Dibalas') {
+			$qrydata = $qrydata->whereIsNull('tanggalbalasan');
+		} else if ($request->filter == 'Sudah Dibalas') {
+			$qrydata = $qrydata->whereNotNull('tanggalbalasan');
+		}
+
+		if (!empty($request->pencarian)) {
+      $pencarian = $request->pencarian;
+      $qrydata = $qrydata->where(function($query) use ($pencarian)
+			{
+					$query->orWhereRaw('emailcustomer like \'%'.$pencarian.'%\'')
+								->orWhereRaw('judul like \'%'.$pencarian.'%\'')
+								->orWhereRaw('judulbalasan like \'%'.$pencarian.'%\'');
+			});
+		}
+
+    session(['emailtablepage' => (object) [
+      'tampilkan' => $request->tampilkan
+      ,'filter' => $request->filter
+      ,'pencarian' => $request->pencarian
+      ,'pagego' => $request->pagego
+    ]]);
+
+		$totalpesan = $qrydata->count();
+		$datatbpesan = $qrydata->skip($page)->take($limit)->get();
+
+    $pesans = [];
+    foreach ($datatbpesan as $pesan) {
+      $pesans[] = [
+      	'id' => $pesan->id,
+      	'emailcustomer' => $pesan->emailcustomer,
+      	'email' => $pesan->emailcustomer,
+      	'judul' => $pesan->judul,
+      	'pesan' => $pesan->pesan,
+      	'judulbalasan' => $pesan->judulbalasan,
+      	'pesanbalasan' => $pesan->pesanbalasan,
+      	'tanggalbalasan' => $this->formatdatetimeshow($pesan->tanggalbalasan),
+      	'created_at' => $this->formatdatetimeshow($pesan->created_at),
+      	'prosespengiriman' => false,
+      ];
+    }
+    $totalpage = floor($totalpesan / $limit);
+    if ($totalpesan % $limit > 0) {
+      $totalpage++;
+    }
+    return [
+      'pesans' => $pesans,
+      'totalpesan' => number_format($totalpesan, 0, ',','.'),
+      'totalpage' => $totalpage,
+    ];
+  }
+  public function balaspesan(Request $request) {
+    $tbpesancustomer = TbPesanCustomer::find($request->pesanid);
+    $tbpesancustomer->tanggalbalasan = DB::RAW('now()');
+    $tbpesancustomer->pesanbalasan = $request->pesanbalasan;
+    $tbpesancustomer->update();
+
+    $tbpesancustomer = TbPesanCustomer::find($request->pesanid);
+    if (env('kirimemail') == 1 && !is_null($tbpesancustomer->emailcustomer) && !empty($tbpesancustomer->emailcustomer) &&  filter_var($tbpesancustomer->emailcustomer, FILTER_VALIDATE_EMAIL)) {
+      $headers = 'From: cs@surabayadigitalcity.net' . "rn";
+      mail($tbpesancustomer->emailcustomer, 'Re - '.$tbpesancustomer->judul, $tbpesancustomer->pesanbalasan, $headers);
+    }
+    return ['tanggalbalasan' => $tbpesancustomer->tanggalbalasan];
   }
 }
