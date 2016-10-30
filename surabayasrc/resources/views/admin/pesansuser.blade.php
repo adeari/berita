@@ -43,12 +43,17 @@
 	</div>
 </div></div>
 
-<div class="row" v-for="pesan in pesans"><div class="col-md-12 col-sm-12 col-xs-12"><div class="x_panel">
-    <div class="x_title"><h2>@{{ pesan.judul }}</h2><div class="clearfix"></div></div>
+<div class="row" v-for="pesan in pesans" v-bind:class="blur"><div class="col-md-12 col-sm-12 col-xs-12"><div class="x_panel">
+    <div class="x_title">
+      <h2>@{{ pesan.judul }}</h2>
+      <ul class="nav navbar-right" v-show="pesan.tanggalbalasan.length > 0"><li><a class="close-link pointer red" @click="hapusini(pesan)"><i class="fa fa-close" style="text-align:right;"></i></a></li> </ul>
+      <div class="clearfix"></div>
+    </div>
     <div class="x_content">
       <div class="col-md-6 col-sm-6 col-xs-12">
         <p><b>@{{ pesan.created_at }}</b></p>
         <p><span style="font-size:22px;color:brown;"><i class="fa fa-envelope-o"></i> @{{ pesan.email }}</span></p>
+        <p style="font-size:18px;">Judul:@{{ pesan.judul }}</p>
         <p>@{{ pesan.pesan }}</p>
       </div>
       <div class="col-md-6 col-sm-6 col-xs-12 tile_stats_count">
@@ -98,6 +103,16 @@
       </div>
     </div>
 </div></div></div>
+
+<div class="row"><div class="col-md-12 col-sm-12 col-xs-12">
+	<div class="x_panel">
+    <ul class="pagination paginationmee">
+  	  <li @click.stop.prevent="gopage(1)" v-show="gofirstpageshow"><a href="">&laquo;</a></li>
+  	  <li v-for="page in pages" v-bind:class="page.class" @click.stop.prevent="gopage(page.page)"><a href="">@{{ page.page }}</a></li>
+  	  <li @click.stop.prevent="golastpage()" v-show="golastpageshow"><a href="">&raquo;</a></li>
+    </ul>
+	</div>
+</div></div>
 
 <div class="row"><div class="col-md-12 col-sm-12 col-xs-12">
 	<div class="x_panel">
@@ -229,6 +244,20 @@ vm = new Vue({
             jsonresponse = JSON.parse(response.body);
             pesan.tanggalbalasan = jsonresponse.tanggalbalasan;
           }
+        });
+      }
+    },
+    hapusini:function(pesan) {
+      elem = this;
+      var index = elem.pesans.indexOf(pesan);
+      if (index > -1) {
+        this.$http.post('{{ URL::to('admin-hapusbalaspesan') }}' , {_token: '{!! csrf_token() !!}'
+          , pesanid: pesan.id
+        }).then(function(response) {
+            canajaxprocess = true;
+            pesan.prosespengiriman = false;
+            elem.pesans.splice(index, 1);
+            elem.totalpesan--;
         });
       }
     }

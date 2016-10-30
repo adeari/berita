@@ -513,7 +513,7 @@ class SurabayaAdminLoginController extends MasterController
 		]);
   }
   public function pesanusertable(Request $request){
-    $limit = 50;
+    $limit = 10;
     $page = 0;
     if ($request->pagego) {
       $page = (intval($request->pagego) - 1) * $limit;
@@ -526,7 +526,7 @@ class SurabayaAdminLoginController extends MasterController
 		}
 
 		if ($request->filter == 'Belum Dibalas') {
-			$qrydata = $qrydata->whereIsNull('tanggalbalasan');
+			$qrydata = $qrydata->whereNull('tanggalbalasan');
 		} else if ($request->filter == 'Sudah Dibalas') {
 			$qrydata = $qrydata->whereNotNull('tanggalbalasan');
 		}
@@ -588,5 +588,9 @@ class SurabayaAdminLoginController extends MasterController
       mail($tbpesancustomer->emailcustomer, 'Re - '.$tbpesancustomer->judul, $tbpesancustomer->pesanbalasan, $headers);
     }
     return ['tanggalbalasan' => $tbpesancustomer->tanggalbalasan];
+  }
+  public function hapusbalaspesan(Request $request) {
+    TbPesanCustomer::find($request->pesanid)->delete();
+    return 1;
   }
 }
