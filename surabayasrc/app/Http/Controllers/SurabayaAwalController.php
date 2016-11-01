@@ -45,6 +45,49 @@ class SurabayaAwalController extends MasterController
     			, 'backpage' => 'populer'
     	]);
     }
+    public function beritacari($jenis, Request $request) {
+      $folderimage = 'public/image';
+
+      $qrydata = TbBerita::orderBy('updated_at', 'desc');
+      if (!empty($request->katapencarian)) {
+        $qrydata = $qrydata->whereRaw('judul like \'%'.$request->katapencarian.'%\'');
+      }
+      if ($jenis != 'terbaru') {
+        if ($jenis == 'populer') {
+          $qrydata = $qrydata->where('populer', '=', true);
+        } else if ($jenis == 'beritasaya') {
+          $qrydata = $qrydata->where('useridinput', '=', Auth::user()->id);
+        } else {
+          $qrydata = $qrydata->where('kategori', '=', $jenis);
+        }
+      }
+
+      $dataresult = $qrydata->get();
+      $beritaresult = [];
+      foreach ($dataresult as $databerita) {
+        $filename = $databerita->filename;
+        if (is_null($filename)) {
+          $filename = '';
+        }
+    		if (!empty($filename)) {
+    			$pathfilename =  $folderimage.'/'.$filename;
+    			$filename = URL::to($pathfilename);
+    		}
+        $tanggal = substr($databerita->updated_at, 8, 2).'/'.substr($databerita->updated_at, 5, 2).'/'.substr($databerita->updated_at, 0, 4).substr($databerita->updated_at, 10, 6);
+        $rowdata = (object) ['id' => $databerita->id
+          ,'filename' => $filename
+          ,'tanggal' => $tanggal
+          ,'judul' => $this->setlinestring($databerita->judul)
+          ,'deskripsi' => $this->setlinestring($databerita->deskripsi)
+        ];
+        if ($jenis == 'beritasaya') {
+          $rowdata->{'showhapusbutton'} = true;
+          $rowdata->{'showlayoutconfirmhapus'} = false;
+        }
+        $beritaresult[] = $rowdata;
+      }
+      return ['beritaresult' => $beritaresult];
+    }
     public function terbaru() {
     	$beritas = '';
     	$databeritas = TbBerita::orderBy('updated_at', 'desc')->get();
@@ -173,16 +216,6 @@ class SurabayaAwalController extends MasterController
     return view ('hubungikami');
   }
   public function kirimpesansekarang(Request $request) {
-    $tbpesancustomer = new TbPesanCustomer();
-    $tbpesancustomer->judul = $request->judul;
-    $tbpesancustomer->pesan = $request->pesan;
-    $tbpesancustomer->emailcustomer = $request->email;
-    $tbpesancustomer->save();
-
-    if (env('kirimemail') == 1 && !empty($request->email) &&  filter_var( $request->email, FILTER_VALIDATE_EMAIL)) {
-      $headers = 'From: '.$request->email . "rn";
-      mail('cs@surabayadigitalcity.net', '[Info WEB] '.$request->judul, $request->pesan, $headers);
-    }
-    return 1;
+    return $this->kirimpesancsmaster($request);
   }
 }

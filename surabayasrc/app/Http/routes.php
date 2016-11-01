@@ -1,6 +1,7 @@
 <?php
 Route::get('/', 'SurabayaAwalController@index');
 Route::get('populer', 'SurabayaAwalController@populer');
+Route::get('berita-cari-{jenis}', 'SurabayaAwalController@beritacari');
 Route::get('terbaru', 'SurabayaAwalController@terbaru');
 Route::get('artikel-{artikel}', 'SurabayaAwalController@artikel');
 Route::get('beritadetail-{id}-{backpage}', 'SurabayaAwalController@beritadetail');
@@ -49,10 +50,16 @@ Route::get('android/profileuser', 'AndroidController@profileuser');
 Route::post('android/profileuseredit', 'AndroidController@profileuseredit');
 Route::post('android/profilegantipassword', 'AndroidController@profilegantipassword');
 
+Route::get('android/getpesanafterlogin', 'AndroidController@getpesanafterlogin');
+Route::post('android/deletepesanuser', 'AndroidController@deletepesanuser');
+Route::post('android/kirimpesancs', 'AndroidController@kirimpesancs');
+
 Route::post('android/komentar-add', 'AndroidController@komentaradd');
 Route::get('android/komentar-data-{idberita}', 'AndroidController@komentardata');
 Route::post('android/komentar-deleted', 'AndroidController@komentardeleted');
 Route::post('android/lokasiadd', 'AndroidController@lokasiadd');
+
+Route::post('android/addshareberitauser', 'AndroidController@addshareberitauser');
 
 Route::get('android/cek', 'AndroidController@cek');
 

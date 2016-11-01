@@ -7,6 +7,9 @@ use URL;
 use Auth;
 use App\tables\TbKomentar;
 use App\tables\TbLokasi;
+use App\tables\TbBroadcastPesan;
+use App\tables\TbPesanCustomer;
+use App\tables\TbAdminPesan;
 use App\User;
 use DB;
 
@@ -19,11 +22,12 @@ class AndroidController extends MasterController
     } else if (Auth::attempt(array('nik' => $request->usernamenik, 'password' => $request->password))) {
       $canlogin = 1;
     }
-    if (Auth::user()->isadmin) {
-      return 0;
-    }
-    if ($canlogin && Auth::user()->aktif) {
-      return $canlogin;
+    if ($canlogin) {
+      if (Auth::user()->isadmin) {
+        return 0;
+      } else if (Auth::user()->aktif) {
+        return $canlogin;
+      }
     }
     return 0;
   }
@@ -71,7 +75,11 @@ class AndroidController extends MasterController
     $this->commonactionn();
   }
     $datas = [];
-    $beritas = TbBerita::where('populer', '=', true)-> orderBy('updated_at', 'desc')->get();
+    $beritas = TbBerita::where('populer', '=', true)-> orderBy('updated_at', 'desc');
+    if (!empty($request->pencarian)) {
+      $beritas = $beritas->whereRaw('judul like \'%'.$request->pencarian.'%\'');
+    }
+    $beritas = $beritas->get();
     foreach ($beritas as $berita) {
       $row['id'] = $berita->id;
       $row['judul'] = $berita->judul;
@@ -90,7 +98,12 @@ class AndroidController extends MasterController
       $this->commonactionn();
     }
     $datas = [];
-    $beritas = TbBerita::orderBy('updated_at', 'desc')->get();
+    $beritas = TbBerita::orderBy('updated_at', 'desc');
+    if (!empty($request->pencarian)) {
+      $beritas = $beritas->whereRaw('judul like \'%'.$request->pencarian.'%\'');
+    }
+    $beritas = $beritas->get();
+
     foreach ($beritas as $berita) {
       $row['id'] = $berita->id;
       $row['judul'] = $berita->judul;
@@ -114,6 +127,11 @@ class AndroidController extends MasterController
     $row['deskripsi'] = $berita->deskripsi;
     $row['kategori'] = $berita->kategori;
     $row['tanggal'] = substr($berita->updated_at, 8, 2).'/'.substr($berita->updated_at, 5, 2).'/'.substr($berita->updated_at, 0, 4).substr($berita->updated_at, 10, 6);
+    $userberita = User::find($berita->useridinput);
+    if (!empty($userberita->gambar)) {
+      $userberita->gambar = URL::to('public/image/'.$userberita->gambar);
+    }
+    $row['user1'] = $userberita;
     if (!is_null($berita->filename)) {
       $row['filename'] = URL::to('public/image/'.$berita->filename);
     } else {
@@ -167,7 +185,11 @@ class AndroidController extends MasterController
     $this->commonactionn();
     }
     $datas = [];
-    $beritas = TbBerita::where('kategori', '=', $artikelname)->orderBy('updated_at', 'desc')->get();
+    $beritas = TbBerita::where('kategori', '=', $artikelname)->orderBy('updated_at', 'desc');
+    if (!empty($request->pencarian)) {
+      $beritas = $beritas->whereRaw('judul like \'%'.$request->pencarian.'%\'');
+    }
+    $beritas = $beritas->get();
     foreach ($beritas as $berita) {
       $row['id'] = $berita->id;
       $row['judul'] = $berita->judul;
@@ -184,7 +206,12 @@ class AndroidController extends MasterController
     if ($this->ceklogin($request) == 1) {
     $this->commonactionn();
       $datas = [];
-    $beritas = TbBerita::where('useridinput', '=', Auth::user()->id)->orderBy('updated_at', 'desc')->get();
+    $beritas = TbBerita::where('useridinput', '=', Auth::user()->id)->orderBy('updated_at', 'desc');
+    if (!empty($request->pencarian)) {
+      $beritas = $beritas->whereRaw('judul like \'%'.$request->pencarian.'%\'');
+    }
+    $beritas = $beritas->get();
+
     foreach ($beritas as $berita) {
       $row['id'] = $berita->id;
       $row['judul'] = $berita->judul;
@@ -291,10 +318,20 @@ class AndroidController extends MasterController
   }
   public function profileuseredit(Request $request) {
     if ($this->ceklogin($request) == 1) {
+      if (!empty($request->email)) {
+        if (User::where('email', '=', $request->email)->where('id', '!=', Auth::user()->id)->count() > 0) {
+          return ['success' => 0, 'msg' => 'Email sudah dipakai user lain'];
+        }
+      }
+      if (!empty($request->nik)) {
+        if (User::where('nik', '=', $request->nik)->where('id', '!=', Auth::user()->id)->count() > 0) {
+          return ['success' => 0, 'msg' => 'NIK sudah dipakai user lain'];
+        }
+      }
       $this->commonactionn();
       $this->editprofile($request);
     }
-    return 0;
+    return ['success' => 1];
   }
   public function profilegantipassword(Request $request) {
     if ($this->ceklogin($request) == 1) {
@@ -312,5 +349,39 @@ class AndroidController extends MasterController
 	$tblokasi->save();
     }
     return 0;
+  }
+
+  public function getpesanuser($request) {
+    $datapesan = TbAdminPesan::where('userid', '=', Auth::user()->id)->get();
+    $result = [];
+    foreach ($datapesan as $pesan) {
+      $result[] = ['id' => $pesan->id
+        ,'judul' => $pesan->judul
+        ,'pesan' => $pesan->pesan
+      ];
+    }
+    return $result;
+  }
+  public function getpesanafterlogin(Request $request) {
+    if ($this->ceklogin($request) == 1) {
+      return ['pesan' => TbBroadcastPesan::first()->pesan, 'pesanpribadi' => $this->getpesanuser($request)];
+    }
+    return 1;
+  }
+
+  public function deletepesanuser($id, Request $request) {
+    if ($this->ceklogin($request) == 1) {
+      TbAdminPesan::find($id)->delete();
+    }
+    return 1;
+  }
+  public function kirimpesancs(Request $request) {
+    return $this->kirimpesancsmaster($request);
+  }
+  public function addshareberitauser(Request $request) {
+    if ($this->ceklogin($request) == 1) {
+      User::where('id', '=', Auth::user()->id)->update(['jumlah_share' => DB::raw('jumlah_share + 1')]);
+      return 1;
+    }
   }
 }

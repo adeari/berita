@@ -357,7 +357,7 @@ class SurabayaAdminLoginController extends MasterController
 
       if (env('kirimemail') == 1 && !is_null(Auth::user()->email) && !empty(Auth::user()->email) &&  filter_var( Auth::user()->email, FILTER_VALIDATE_EMAIL)) {
         $usersend = User::find($id);
-        $headers = 'From: cs@surabayadigitalcity.net' . "rn";
+        $headers = 'From: cs@surabayadigitalcity.net';
         mail($usersend->email, '[SurabayaDigitalCity Info] '.$request->judul, $request->pesan, $headers);
       }
       return 1;
@@ -584,7 +584,7 @@ class SurabayaAdminLoginController extends MasterController
 
     $tbpesancustomer = TbPesanCustomer::find($request->pesanid);
     if (env('kirimemail') == 1 && !is_null($tbpesancustomer->emailcustomer) && !empty($tbpesancustomer->emailcustomer) &&  filter_var($tbpesancustomer->emailcustomer, FILTER_VALIDATE_EMAIL)) {
-      $headers = 'From: cs@surabayadigitalcity.net' . "rn";
+      $headers = 'From: cs@surabayadigitalcity.net';
       mail($tbpesancustomer->emailcustomer, 'Re - '.$tbpesancustomer->judul, $tbpesancustomer->pesanbalasan, $headers);
     }
     return ['tanggalbalasan' => $tbpesancustomer->tanggalbalasan];

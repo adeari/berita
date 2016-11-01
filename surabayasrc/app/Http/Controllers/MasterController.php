@@ -10,6 +10,7 @@ use URL;
 use App\tables\TbKomentar;
 use App\tables\TbLokasi;
 use App\tables\TbBerita;
+use App\tables\TbPesanCustomer;
 
 class MasterController extends BaseController
 {
@@ -183,5 +184,18 @@ class MasterController extends BaseController
 			return substr($str, 8, 2) .'/'.substr($str, 5, 2) .'/'. substr($str, 0, 4) .' '.substr($str, 11, 2).':'.substr($str, 14, 2);
 		}
 		return '';
+	}
+	public function kirimpesancsmaster($request) {
+		$tbpesancustomer = new TbPesanCustomer();
+    $tbpesancustomer->judul = $request->judul;
+    $tbpesancustomer->pesan = $request->pesan;
+    $tbpesancustomer->emailcustomer = $request->email;
+    $tbpesancustomer->save();
+
+    if (env('kirimemail') == 1 && !empty($request->email) &&  filter_var( $request->email, FILTER_VALIDATE_EMAIL)) {
+      $headers = 'From: '.$request->email;
+      mail('cs@surabayadigitalcity.net', '[Info WEB] '.$request->judul, $request->pesan, $headers);
+    }
+    return 1;
 	}
 }

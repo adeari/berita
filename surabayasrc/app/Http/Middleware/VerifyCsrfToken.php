@@ -21,5 +21,8 @@ class VerifyCsrfToken extends BaseVerifier
         ,'android/profileuseredit'
         ,'android/profilegantipassword'
         ,'android/lokasiadd'
+        ,'android/deletepesanuser'
+        ,'android/kirimpesancs'
+        ,'android/addshareberitauser'
     ];
 }

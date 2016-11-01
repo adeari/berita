@@ -12,9 +12,9 @@
       <div class="title_right">
 	<div class="col-md-5 col-sm-5 col-xs-12 form-group pull-right top_search">
 	  <div class="input-group">
-	    <input type="text" class="form-control" placeholder="Search for...">
+	    <input type="text" class="form-control" placeholder="Pencarian ..." @keyup.enter="pencarian" v-model="katapencarian">
 	    <span class="input-group-btn">
-	      <button class="btn btn-default" type="button">Go!</button>
+        {!! Form::button('Go!', ['class' => 'btn btn-default', '@click' => 'pencarian' ]) !!}
 	    </span>
 	  </div>
 	</div>
@@ -60,11 +60,23 @@ var vue = new Vue({
 		,isberitaactive : true
 		,beritastyle : { dislay:'block' }
 		,beritas : [{!! $beritas !!}]
+    ,katapencarian:''
 	},
 	methods:{
 		detailberita: function(id){
 			location.href = '{{ URL::to('beritadetail-') }}'+id+'-{{ $backpage }}';
-		}
+		},
+    pencarian: function() {
+      elem = this;
+      elem.$http.get('{{ URL::to('berita-cari-populer') }}?katapencarian='+elem.katapencarian).then(function(response){
+        elem.beritas.splice(0, elem.beritas.length);
+  			elem.beritas = [];
+        if (response.body.length > 0) {
+          var jsonObj = $.parseJSON(response.body);
+          elem.beritas = jsonObj.beritaresult;
+        }
+      });
+    }
 	}
 });
 </script>
