@@ -101,3 +101,6 @@ Route::post('admin-hapusbalaspesan', 'SurabayaAdminLoginController@hapusbalaspes
 
 // Route::get('fgf547rgsdfw43trdgfgjyi657rr23wdsdvfdfrrr3sbgjyu98795521qwdasqsscsf', 'queryyy@query');
 Route::get('kirimemail', 'SurabayaAwalController@kirimemail');
+
+
+Route::get('cobaan', 'CobaController@cobaan');

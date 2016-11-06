@@ -369,9 +369,9 @@ class AndroidController extends MasterController
     return 1;
   }
 
-  public function deletepesanuser($id, Request $request) {
+  public function deletepesanuser(Request $request) {
     if ($this->ceklogin($request) == 1) {
-      TbAdminPesan::find($id)->delete();
+      TbAdminPesan::find($request->id)->delete();
     }
     return 1;
   }
