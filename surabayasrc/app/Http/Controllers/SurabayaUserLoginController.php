@@ -95,7 +95,7 @@ class SurabayaUserLoginController extends MasterController
 	$standardheight = $image_info[1];
 	$imagetype = $image_info[2];
 
-	$width = 500;
+	$width = 1000;
 	if ($width < $standradwidth) {
 	  $height = $width * $standardheight / $standradwidth;
 	  if ($imagetype == IMAGETYPE_JPEG) {

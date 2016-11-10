@@ -104,3 +104,4 @@ Route::get('kirimemail', 'SurabayaAwalController@kirimemail');
 
 
 Route::get('cobaan', 'CobaController@cobaan');
+Route::get('dicoba', 'CobaController@dicoba');
