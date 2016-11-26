@@ -23,7 +23,7 @@
         <div class="col-md-3 left_col menu_fixed">
           <div class="left_col scroll-view">
             <div class="navbar nav_title" style="border: 0;">
-              <a href="{{ URL::to('populer') }}" class="site_title"><i class="fa fa-paw"></i> <span>Surabaya Berita</span></a>
+              <a href="{{ URL::to('populer') }}" class="site_title"><i class="fa fa-paw"></i> <span>Surabaya Digital City</span></a>
             </div>
             <div class="clearfix"></div>
             <br />
@@ -51,10 +51,10 @@
 						<li v-bind:class="{ 'current-page': terbaru }"><a href="{{ URL::to('terbaru') }}"><i class="fa fa-camera-retro"></i> Terbaru</a></li>
                     </ul>
                 </li>
-                <li v-bind:class="{ 'active': isartikelactive }"><a><i class="fa fa-newspaper-o"></i> Artikel <span class="fa fa-chevron-down"></span></a>
+                <li v-bind:class="{ 'active': isartikelactive }"><a><i class="fa fa-newspaper-o"></i> Beranda <span class="fa fa-chevron-down"></span></a>
 					<ul class="nav child_menu" v-bind:style="artikelstyle">
                       	<li v-bind:class="{ 'current-page': umum }"><a href="{{ URL::to('artikel-umum') }}"><i class="fa fa-newspaper-o"></i> Umum</a></li>
-                      	<li v-bind:class="{ 'current-page': acara }"><a href="{{ URL::to('artikel-acara') }}"><i class="fa fa-gift"></i> Acara</a></li>
+                      	<li v-bind:class="{ 'current-page': acara }"><a href="{{ URL::to('artikel-acara') }}"><i class="fa fa-gift"></i> Promo Anda</a></li>
                       	<li v-bind:class="{ 'current-page': pengaduan }"><a href="{{ URL::to('artikel-pengaduan') }}"><i class="fa fa-binoculars"></i> Pengaduan</a></li>
                       	<li v-bind:class="{ 'current-page': androidpage }"><a href="{{ URL::to('androidpage') }}"><i class="fa fa-android"></i> Android</a></li>
                     </ul>

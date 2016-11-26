@@ -1,12 +1,12 @@
 @extends('layout')
-@section('title', $artikel)
+@section('title', $artikelview)
 @section('content')
 <!-- page content -->
 <div class="right_col" role="main">
   <div class="">
     <div class="page-title">
       <div class="title_left">
-	<h3>{{ $artikel }}</h3>
+	<h3>{{ $artikelview }}</h3>
       </div>
 
       <div class="title_right">

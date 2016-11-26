@@ -1,5 +1,5 @@
 @extends('layout')
-@section('title', 'Surabaya Berita Populer')
+@section('title', 'Surabaya Digital City')
 @section('content')
         <!-- page content -->
         <div class="right_col" role="main">
@@ -19,7 +19,7 @@
                     <div class="item form-group">
                         {!! Form::label('kategori', 'Kategori', ['class' => 'control-label col-md-3 col-sm-3 col-xs-12']) !!}
                         <div class="col-md-6 col-sm-6 col-xs-12">
-                          {!! Form::select('kategori', ['Umum' => 'Umum', 'Acara' => 'Acara', 'Pengaduan' => 'Pengaduan', ], 'Umum', ['class' => 'form-control col-md-7 col-xs-12', 'id' => 'judulberita', 'required' => 'required', 'v-model' => 'kategori']) !!}
+                          {!! Form::select('kategori', ['Umum' => 'Umum', 'Acara' => 'Promo Anda', 'Pengaduan' => 'Pengaduan', ], 'Umum', ['class' => 'form-control col-md-7 col-xs-12', 'id' => 'judulberita', 'required' => 'required', 'v-model' => 'kategori']) !!}
                         </div>
                       </div>
                     <div class="item form-group">

@@ -1,4 +1,4 @@
-@section('title', $berita->judul .' - Surabaya Berita Populer')
+@section('title', $berita->judul .' - Surabaya Digital City')
 @section('content')
 <!-- page content -->
 <div class="right_col" role="main">

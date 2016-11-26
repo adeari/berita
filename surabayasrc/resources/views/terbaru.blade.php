@@ -1,5 +1,5 @@
 @extends('layout')
-@section('title', 'Surabaya Berita Terbaru')
+@section('title', 'Surabaya Digital City')
 @section('content')
 <!-- page content -->
 <div class="right_col" role="main">

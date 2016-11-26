@@ -127,9 +127,16 @@ class SurabayaAwalController extends MasterController
     		$beritas .= '{id:'.$databerita->id.', filename:\''.$filename.'\', judul:\''.$this->setlinestring($databerita->judul).'\', deskripsi: \''.$this->setlinestring($databerita->deskripsi).'\'
     				,tanggal:\''.$tanggal.'\'}';
     	}
+    	$artikelview = $artikel;
+    	if ($artikelview == 'acara') {
+	  $artikelview = 'Promo Anda';
+    	} else {
+	  $artikelview = ucfirst($artikel);
+    	}
     	return view('artikel', [
     			'beritas' => $beritas
     			, 'artikel' => ucfirst($artikel)
+    			, 'artikelview' => $artikelview
     			, 'backpage' => $artikel
     	]);
     }
