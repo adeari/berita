@@ -1,0 +1,43 @@
+ 
+
+ berita terdiri dari 5 menu
+1. populer yaitu berita berita paling hebat yang di tentukan oleh admin
+2. terbaru -> menampilkan semua berita mulai dari yang terbaru sampai terlama
+3 artikel umum
+4 artikel acara
+5. artikel pengaduan
+
+untuk android
+1. user login dengan facebook dan google+
+2. pendaftaran user dengan email, user, password.
+3. profile user hp, alamat, negara
+4. user bisa menambah menghapus berita
+5. user bisa memberi komentar
+6. tanpa login orang lain bisa melihat berita dan komentar serta bisa di share ke facebook
+7. user bisa memberikan pengaduan kepada admin
+8. saat pertama login ada halaman info dari admin kepada user
+
+untuk web
+1. user login dengan facebook dan google+
+2. pendaftaran user dengan email, user, password.
+3. profile user hp, alamat, negara
+4. user bisa menambah menghapus berita
+5. user bisa memberi komentar
+6. tanpa login orang lain bisa melihat berita dan komentar serta bisa di share ke facebook
+7. user bisa memberikan pengaduan kepada admin
+8. saat pertama login ada halaman info dari admin kepada user
+
+
+untuk web halaman admin
+1. admin dapat menghapus berita
+2. admin dapat menonaktifkan user agar user tersebut tidak bisa login
+3. admin dapat menentukan berita2 populer 
+4. admin dapat melihat user beserta berita2 yang di buat oleh user tersebut
+5. halaman pengaduan
+6. halaman pertama setelah login akan tampil jumlah user yang ada jumlah berita yang ada 
+	, grafik bulanan jumlah berta di setiap harinya
+7. admin dapat memberikan pesan pada semua user yang tampil saat pertama kali user tersebut login
+8. admin dapat memberikan pesan khusus pada user user tertentu misal untuk memberitahu sesuatu
+	atau memberi peringatan jika dia nakal
+9. saat melakukan membalas pengaduan atau memberikan komentar di semua user atau ke user tertentu maka user tersebut akan
+	menerima email juga. admin juga akan menerima email pengaduan dari user.

@@ -18,15 +18,15 @@
     <link href="{{ URL::to('pluginhtml/mycustom.css') }}" rel="stylesheet">
   </head>
   <body class="nav-md">
+<div class="headerlogo">
+<a href="{{ URL::to('populer') }}"><img src="{{ URL::to('public/imagesystem/header.jpg') }}" height="80px" width="300px"></a>
+</div>
     <div class="container body">
       <div class="main_container">
         <div class="col-md-3 left_col menu_fixed">
           <div class="left_col scroll-view">
-            <div class="navbar nav_title" style="border: 0;">
-              <a href="{{ URL::to('populer') }}" class="site_title"><i class="fa fa-paw"></i> <span>Surabaya Digital City</span></a>
-            </div>
+            <div class="nav_title" style="border: 0;height:0px;"></div>
             <div class="clearfix"></div>
-            <br />
             <!-- sidebar menu -->
             <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
             	<ul class="nav side-menu">
